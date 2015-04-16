@@ -1,9 +1,11 @@
 #include "GBCPU.h"
 
-GBCPU::GBCPU()
-{
-}
+namespace GameBoy {
+	GBCPU::GBCPU()
+	{
+	}
 
-GBCPU::~GBCPU()
-{
+	GBCPU::~GBCPU()
+	{
+	}
 }

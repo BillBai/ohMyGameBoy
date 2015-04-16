@@ -2,23 +2,27 @@
 
 #include <cstdint>
 
-#include "GBCPU.h"
+#include "GBTypes.h"
 
-class GBMemoryUnit
-{
-public:
-	static const int GBMemroyCapacity = 0xffff;
+namespace GameBoy {
+	class GBMemoryUnit
+	{
+	public:
+		static const size_t GBMemroyCapacity = 0xffff;
 
-	// Memory interface
-	void writeByte(GBCPU::address address, GBCPU::byte value);
-	GBCPU::byte readByte(GBCPU::address address);
-	
-	void writeWord(GBCPU::address address, GBCPU::word value);
-	GBCPU::word readWord(GBCPU::address address);
+		GBMemoryUnit();
 
-	GBMemoryUnit();
-	~GBMemoryUnit();
-private:
-	uint8_t memory[GBMemroyCapacity];
-};
+		// Memory interface
+		void writeByte(address addr, byte val);
+		byte readByte(address addr);
+
+		void writeWord(address addr, word val);
+		word readWord(address addr);
+
+		~GBMemoryUnit();
+	private:
+		uint8_t memory[GBMemroyCapacity];
+	};
+}
+
 

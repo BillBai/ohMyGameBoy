@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClInclude Include="GBCPU.h" />
     <ClInclude Include="GBMemoryUnit.h" />
+    <ClInclude Include="GBTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
