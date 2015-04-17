@@ -21,6 +21,7 @@ namespace GameBoy {
 
 	inline word combineByteToWord(byte h, byte l)
 	{
-		return (word)((h << 8) | l);
+		word wh = (word)h;
+		return (word)((wh << 8) | l);
 	}
 }

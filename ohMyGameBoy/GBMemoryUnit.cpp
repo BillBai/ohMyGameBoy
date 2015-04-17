@@ -19,12 +19,15 @@ namespace GameBoy {
 
 	void GBMemoryUnit::writeWord(address addr, word val)
 	{
-		memory[addr] = val;
+		memory[addr + 1] = getHighByte(val);
+		memory[addr] = getLowByte(val);
 	}
 
 	word GBMemoryUnit::readWord(address addr)
 	{
-		return memory[addr];
+		byte h = memory[addr + 1];
+		byte l = memory[addr];
+		return combineByteToWord(h, l);
 	}
 
 	GBMemoryUnit::~GBMemoryUnit()

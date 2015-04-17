@@ -80,14 +80,79 @@ namespace GameBoy {
 
 	void GBCPU::LD_mnn_SP()
 	{
-		word tmp = memoryUnit->readWord
+		address addr = memoryUnit->readWord(regPC);
+		memoryUnit->writeWord(addr, regSP);
+		regPC += 2;
 	}
 
-	void ADD_HL_BC();
-	void LD_A_mBC();
-	void DEC_BC();
-	void INC_C();
-	void DEC_C();
-	void LD_C_n();
-	void RRCA();
+	void GBCPU::ADD_HL_BC()
+	{
+		word HL = combineByteToWord(regH, regL);
+		word BC = combineByteToWord(regB, regC);
+		word sum = HL + BC;
+		regH = getHighByte(sum);
+		regL = getLowByte(sum);
+
+		clearSubtractFlag();
+		if (regL > getLowByte(sum)) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+		if (sum < HL || sum < BC) { setCarryFlag(); }
+		else { clearCarryFlag(); }
+	}
+
+	void GBCPU::LD_A_mBC()
+	{
+		regA = memoryUnit->readByte(combineByteToWord(regB, regC));
+	}
+	
+	void GBCPU::DEC_BC()
+	{
+		word tmp = combineByteToWord(regB, regC) - 1;
+		regB = getHighByte(tmp);
+		regC = getLowByte(tmp);
+	}
+
+	void GBCPU::INC_C()
+	{
+		regC += 1;
+
+		if (regC == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regC & 0x0F) == 0) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		clearSubtractFlag();
+	}
+
+	void GBCPU::DEC_C()
+	{
+		regC -= 1;
+
+		if (regC == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regC & 0x0F) == 0x0F) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		setSubtractFlag();
+	}
+
+	void GBCPU::LD_C_n()
+	{
+		regC = memoryUnit->readByte(regPC);
+		regPC += 1;
+	}
+
+	void GBCPU::RRCA()
+	{
+		regA = (regA >> 1) | (regA << 7);
+
+		if (regA > 0x7F) { setCarryFlag(); }
+		else { clearCarryFlag(); }
+
+		clearZeroFlag();
+		clearSubtractFlag();
+		clearHalfCarryFlag();
+	}
 }
