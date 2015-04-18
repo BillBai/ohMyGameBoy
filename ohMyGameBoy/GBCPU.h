@@ -23,10 +23,10 @@ namespace GameBoy {
 		// flag register accessors
 		// Z | N | H | C | 0 | 0 | 0 | 0
 		word getFlag()			const { return regFlag; }
-		bool getZeroFlag()		const { return regFlag & 0x80; }
-		bool getSubtractFlag()	const { return regFlag & 0x40; }
-		bool getHalfCarryFlag() const { return regFlag & 0x20; }
-		bool getCarryFlag()		const { return regFlag & 0x10; }
+		bool getZeroFlag()		const { return (regFlag & 0x80) != 0; }
+		bool getSubtractFlag()	const { return (regFlag & 0x40) != 0; }
+		bool getHalfCarryFlag() const { return (regFlag & 0x20) != 0; }
+		bool getCarryFlag()		const { return (regFlag & 0x10) != 0; }
 
 		~GBCPU();
 
@@ -116,7 +116,7 @@ namespace GameBoy {
 		void JR_C_n();		// 0x38 JR C, n
 		void ADD_HL_SP();	// 0x39 ADD HL, SP
 		void LDD_A_mHL();	// 0x3A LDD A, (HL)
-		void DEC_A();		// 0x3B DEC A
+		void DEC_SP();		// 0x3B DEC A
 		void INC_A();		// 0x3C INC A
 		void DEC_A();		// 0x3D DEC A
 		void LD_A_n();		// 0x3E LD A, n

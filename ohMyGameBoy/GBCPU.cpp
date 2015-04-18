@@ -37,7 +37,7 @@ namespace GameBoy {
 	{
 		regB += 1;
 
-		if (regB == 0) { setZeroFlag(); } 
+		if (regB == 0) { setZeroFlag(); }
 		else { clearZeroFlag(); }
 
 		if ((regB & 0x0F) == 0) { setHalfCarryFlag(); }
@@ -90,12 +90,15 @@ namespace GameBoy {
 		word HL = combineByteToWord(regH, regL);
 		word BC = combineByteToWord(regB, regC);
 		word sum = HL + BC;
+
+		if (HL & 0x0FFF > sum & 0x0FFF) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
 		regH = getHighByte(sum);
 		regL = getLowByte(sum);
 
 		clearSubtractFlag();
-		if (regL > getLowByte(sum)) { setHalfCarryFlag(); }
-		else { clearHalfCarryFlag(); }
+		
 		if (sum < HL || sum < BC) { setCarryFlag(); }
 		else { clearCarryFlag(); }
 	}
@@ -104,7 +107,7 @@ namespace GameBoy {
 	{
 		regA = memoryUnit->readByte(combineByteToWord(regB, regC));
 	}
-	
+
 	void GBCPU::DEC_BC()
 	{
 		word tmp = combineByteToWord(regB, regC) - 1;
@@ -156,28 +159,155 @@ namespace GameBoy {
 		clearHalfCarryFlag();
 	}
 
+	// 0x10 ~ 0x1F
 	void GBCPU::STOP()
 	{
 		// TODO: handle stop
 	}
 
-	// 0x10 ~ 0x1F
-	void STOP();
-	void LD_DE_nn();
-	void LD_mDE_A();
-	void INC_DE();
-	void INC_D();
-	void DEC_D();
-	void LD_D_n();
-	void RLA();
-	void JR_n();
-	void ADD_HL_DE();
-	void LD_A_mDE();
-	void DEC_DE();
-	void INC_E();
-	void DEC_E();
-	void LD_E_n();
-	void RRA();
+	void GBCPU::LD_DE_nn()
+	{
+		regD = memoryUnit->readByte(regPC);
+		regE = memoryUnit->readByte(regPC + 1);
+		regPC += 2;
+	}
+
+	void GBCPU::LD_mDE_A()
+	{
+		address addr = combineByteToWord(regD, regE);
+		memoryUnit->writeWord(addr, regA);
+	}
+
+	void GBCPU::INC_DE()
+	{
+		word tmp = combineByteToWord(regD, regE) + 1;
+		regD = getHighByte(tmp);
+		regE = getLowByte(tmp);
+	}
+
+	void GBCPU::INC_D()
+	{
+		regD += 1;
+		if (regD == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regD & 0x0F) == 0) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		clearSubtractFlag();
+	}
+
+	void GBCPU::DEC_D()
+	{
+		regD -= 1;
+		if (regD == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regD & 0x0F) == 0) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		setSubtractFlag();
+	}
+
+	void GBCPU::LD_D_n()
+	{
+		regD = memoryUnit->readByte(regPC);
+		regPC += 1;
+	}
+
+	void GBCPU::RLA()
+	{
+		byte carryFlag = getCarryFlag() ? 0x1 : 0x0;
+		if (regA > 0x7F) { setCarryFlag(); }
+		else { clearCarryFlag(); }
+
+		regA = regA << 1 | carryFlag;
+		
+		clearZeroFlag();
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+	}
+
+	void GBCPU::JR_n()
+	{
+		word offset = (word)memoryUnit->readByte(regPC);
+		regPC = regPC + offset;
+	}
+
+	void GBCPU::ADD_HL_DE()
+	{
+		word HL = combineByteToWord(regH, regL);
+		word DE = combineByteToWord(regD, regE);
+		word sum = HL + DE;
+
+		if (HL & 0x0FFF > sum & 0x0FFF) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		regH = getHighByte(sum);
+		regL = getLowByte(sum);
+
+		if (sum < HL || sum < DE) { setCarryFlag(); }
+		else { clearCarryFlag(); }
+
+		clearSubtractFlag();
+	}
+
+	void GBCPU::LD_A_mDE()
+	{
+		regA = memoryUnit->readByte(combineByteToWord(regD, regE));
+	}
+
+	void GBCPU::DEC_DE()
+	{
+		word DE = combineByteToWord(regD, regE) - 1;
+		regD = getHighByte(DE);
+		regE = getLowByte(DE);
+	}
+
+	void GBCPU::INC_E()
+	{
+		regE += 1;
+
+		if (regE == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regE & 0x0F) == 0) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		clearSubtractFlag();
+	}
+
+	void GBCPU::DEC_E()
+	{
+		regE -= 1;
+		if (regE == 0) { setZeroFlag(); }
+		else { clearZeroFlag(); }
+
+		if ((regE & 0x0F) == 0) { setHalfCarryFlag(); }
+		else { clearHalfCarryFlag(); }
+
+		setSubtractFlag()
+	}
+
+	void GBCPU::LD_E_n()
+	{
+		regE = memoryUnit->readByte(regPC);
+		regPC += 1;
+	}
+
+	void GBCPU::RRA()
+	{
+		byte carryFlag = getCarryFlag() ? 0x1 : 0x0;
+
+		if ((regA & 0x01) == 1) { setCarryFlag(); }
+		else { clearCarryFlag(); }
+		regA = regA >> 1 | carryFlag;
+
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearHalfCarryFlag();
+	}
+
 	// 0x20 ~ 0x2F
 	void JR_NZ_n();
 	void LD_HL_nn();
