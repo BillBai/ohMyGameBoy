@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	byte h = 0x11;
 	byte l = 0x88;
 
-	word r = GameBoy::combineByteToWord(h, l);
+	auto r = GameBoy::combineByteToWord(h, l);
 
 	getchar();
 	return 0;
