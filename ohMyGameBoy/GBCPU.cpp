@@ -552,22 +552,199 @@ namespace GameBoy
 	}
 
 	// 0x30 ~ 0x3F
-	void JR_NC_n();
-	void LD_SP_nn();
-	void LDD_mHL_A();
-	void INC_SP();
-	void INC_mHL();
-	void DEC_mHL();
-	void LD_mHL_n();
-	void SCF();
-	void JR_C_n();
-	void ADD_HL_SP();
-	void LDD_A_mHL();
-	void DEC_A();
-	void INC_A();
-	void DEC_A();
-	void LD_A_n();
-	void CCF();
+	void GBCPU::JR_NC_n()
+	{
+		if (!getCarryFlag()) {
+			regPC = regPC + memoryUnit->readByte(regPC);
+		} else {
+			regPC += 1;
+		}
+	}
+
+	void GBCPU::LD_SP_nn()
+	{
+		byte high = memoryUnit->readByte(regPC + 1);
+		byte low = memoryUnit->readByte(regPC);
+		regSP = combineByteToWord(high, low);
+	}
+
+	void GBCPU::LDD_mHL_A()
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regA);
+		HL -= 1;
+		regH = getHighByte(HL);
+		regL = getLowByte(HL);
+	}
+
+	void GBCPU::INC_SP()
+	{
+		regSP += 1;
+	}
+
+	void GBCPU::INC_mHL()
+	{
+		word addr = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(addr) + 1;
+		
+		if (tmp == 0) {
+			setZeroFlag();
+		} else {
+			clearZeroFlag();
+		}
+
+		if ((tmp & 0x0F) == 0) {
+			setHalfCarryFlag();
+		} else {
+			clearHalfCarryFlag();
+		}
+		
+		clearSubtractFlag();
+
+		memoryUnit->writeByte(addr, tmp);
+	}
+
+	void GBCPU::DEC_mHL()
+	{
+		word addr = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(addr) - 1;
+
+		if (tmp == 0) {
+			setZeroFlag();
+		}
+		else {
+			clearZeroFlag();
+		}
+
+		if ((tmp & 0x0F) == 0x0F) {
+			setHalfCarryFlag();
+		}
+		else {
+			clearHalfCarryFlag();
+		}
+
+		setSubtractFlag();
+
+		memoryUnit->writeByte(addr, tmp);
+	}
+
+	void GBCPU::LD_mHL_n()
+	{
+		byte val = memoryUnit->readByte(regPC);
+		word addr = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(addr, val);
+		regPC += 1;
+	}
+
+	void GBCPU::SCF()
+	{
+		setCarryFlag();
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+	}
+
+	void GBCPU::JR_C_n()
+	{
+		if (getCarryFlag()) {
+			regPC = regPC + memoryUnit->readByte(regPC);
+		} else {
+			regPC += 1;
+		}
+	}
+
+	void GBCPU::ADD_HL_SP()
+	{
+		word HL = combineByteToWord(regH, regL);
+		word sum = HL + regSP;
+		
+		if ((HL & 0x0FFF) > (sum & 0xFFF)) {
+			setHalfCarryFlag();
+		} else {
+			clearHalfCarryFlag();
+		}
+
+		clearSubtractFlag();
+
+		if ((sum < HL) || (sum < regSP)) {
+			setCarryFlag();
+		} else {
+			clearCarryFlag();
+		}
+
+		regH = getHighByte(sum);
+		regL = getLowByte(sum);
+	}
+
+	void GBCPU::LDD_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regA = memoryUnit->readByte(HL);
+		HL -= 1;
+		regH = getHighByte(HL);
+		regL = getLowByte(HL);
+	}
+
+	void GBCPU::DEC_SP()
+	{
+		regSP -= 1;
+	}
+
+	void GBCPU::INC_A()
+	{
+		regA += 1;
+		if (regA == 0) {
+			setZeroFlag();
+		} else {
+			clearZeroFlag();
+		}
+
+		if ((regA & 0x0F) == 0) {
+			setHalfCarryFlag();
+		} else {
+			clearHalfCarryFlag();
+		}
+
+		clearSubtractFlag();
+	}
+
+	void GBCPU::DEC_A()
+	{
+		regA -= 1;
+		if (regA == 0) {
+			setZeroFlag();
+		}
+		else {
+			clearZeroFlag();
+		}
+
+		if ((regA & 0x0F) == 0x0F) {
+			setHalfCarryFlag();
+		}
+		else {
+			clearHalfCarryFlag();
+		}
+
+		setSubtractFlag();
+	}
+
+	void GBCPU::LD_A_n()
+	{
+		regA = memoryUnit->readByte(regPC);
+		regPC += 1;
+	}
+
+	void GBCPU::CCF()
+	{
+		if (getCarryFlag) {
+			clearCarryFlag();
+		} else {
+			setCarryFlag();
+		}
+
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+	}
+
 	// 0x40 ~ 0x4F
 	void LD_B_B();
 	void LD_B_C();
