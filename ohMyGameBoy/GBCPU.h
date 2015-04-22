@@ -167,6 +167,178 @@ namespace GameBoy
 		void LD_E_mHL();	// 0x5E LD E, (HL)
 		void LD_E_A();		// 0x5F LD E, A
 		// 0x60 ~ 0x6F
+		void LD_H_B();		// LD H, B
+		void LD_H_C();		// LD H, C
+		void LD_H_D();		// LD H, D
+		void LD_H_E();		// LD H, E
+		void LD_H_H();		// LD H, H
+		void LD_H_L();		// LD H, L
+		void LD_H_mHL();	// LD H, (HL)
+		void LD_H_A();		// LD H, A
+		void LD_L_B();		// LD L, B
+		void LD_L_C();		// LD L, C
+		void LD_L_D();		// LD L, D
+		void LD_L_E();		// LD L, E
+		void LD_L_H();		// LD L, H
+		void LD_L_L();		// LD L, L
+		void LD_L_mHL();	// LD L, (HL)
+		void LD_L_A();		// LD L, A
+		// 0x70 ~ 0x7F
+		void LD_mHL_B();	// LD (HL), B
+		void LD_mHL_C();	// LD (HL), C
+		void LD_mHL_D();	// LD (HL), D
+		void LD_mHL_E();	// LD (HL), E
+		void LD_mHL_H();	// LD (HL), H
+		void LD_mHL_L();	// LD (HL), L
+		void HALT();		// HALT
+		void LD_mHL_A();	// LD (HL), A
+		void LD_A_B();		// LD A, B
+		void LD_A_C();		// LD A, C
+		void LD_A_D();		// LD A, D
+		void LD_A_E();		// LD A, E
+		void LD_A_H();		// LD A, H
+		void LD_A_L();		// LD A, L
+		void LD_A_mHL();	// LD A, (HL)
+		void LD_A_A();		// LD A, A
+		// 0x80 ~ 0x8F
+		void ADD_A_B();		// ADD A, B
+		void ADD_A_C();		// ADD A, C
+		void ADD_A_D();		// ADD A, D
+		void ADD_A_E();		// ADD A, E
+		void ADD_A_H();		// ADD A, H
+		void ADD_A_L();		// ADD A, L
+		void ADD_A_mHL();	// ADD A, (HL)
+		void ADD_A_A();		// ADD A, A
+		void ADC_A_B();		// ADC A, B
+		void ADC_A_C();		// ADC A, C
+		void ADC_A_D();		// ADC A, D
+		void ADC_A_E();		// ADC A, E
+		void ADC_A_H();		// ADC A, H
+		void ADC_A_L();		// ADC A, L
+		void ADC_A_mHL();	// ADC A, (HL)
+		void ADC_A_A();		// ADC A, A
+		// 0x90 ~ 0x9F
+		void SUB_A_B();		// SUB A, B
+		void SUB_A_C();		// SUB A, C
+		void SUB_A_D();		// SUB A, D
+		void SUB_A_E();		// SUB A, E
+		void SUB_A_H();		// SUB A, H
+		void SUB_A_L();		// SUB A, L
+		void SUB_A_mHL();	// SUB A, (HL)
+		void SUB_A_A();		// SUB A, A
+		void SBC_A_B();		// SBC A, B
+		void SBC_A_C();		// SBC A, C
+		void SBC_A_D();		// SBC A, D
+		void SBC_A_E();		// SBC A, E
+		void SBC_A_H();		// SBC A, H
+		void SBC_A_L();		// SBC A, L
+		void SBC_A_mHL();	// SBC A, (HL)
+		void SBC_A_A();		// SBC A, A
+		// 0xA0 ~ 0xAF
+		void AND_B();		// AND B
+		void AND_C();		// AND C
+		void AND_D();		// AND D
+		void AND_E();		// AND E
+		void AND_H();		// AND H
+		void AND_L();		// AND L
+		void AND_mHL();		// AND (HL)
+		void AND_A();		// AND A
+		void XOR_B();		// XOR B
+		void XOR_C();		// XOR C
+		void XOR_D();		// XOR D
+		void XOR_E();		// XOR E
+		void XOR_H();		// XOR H
+		void XOR_L();		// XOR L
+		void XOR_mHL();		// XOR (HL)
+		void XOR_A();		// XOR A
+		// 0xB0 ~ 0xBF
+		void OR_B();		// OR B
+		void OR_C();		// OR C
+		void OR_D();		// OR D
+		void OR_E();		// OR E
+		void OR_H();		// OR H
+		void OR_L();		// OR L
+		void OR_mHL();		// OR (HL)
+		void OR_A();		// OR A
+		void CP_B();		// CP B
+		void CP_C();		// CP C
+		void CP_D();		// CP D
+		void CP_E();		// CP E
+		void CP_H();		// CP H
+		void CP_L();		// CP L
+		void CP_mHL();		// CP (HL)
+		void CP_A();		// CP A
+		// 0xC0 ~ 0xCF
+		void RET_nFZ();		// RET !FZ
+		void POP_BC();		// POP BC
+		void JP_nFZ_nn();	// JP !FZ, nn
+		void JP_nn();		// JP nn
+		void CALL_nFZ_nn();	// CALL !FZ, nn
+		void PUSH_BC();		// PUSH BC
+		void ADD_n();		// ADD n
+		void RST_0();		// RST 0
+		void RET_FZ();		// RET FZ
+		void RET();			// RET
+		void JP_FZ_nn();	// JP FZ, nn
+		void CB_op_code();	// secondary op code, begin with 0xCB
+		void CALL_FZ_nn();	// CALL FZ, nn
+		void CALL_nn();		// CALL nn
+		void ADC_A_n();		// ADC A, n
+		void RST_8();		// RST 0x8
+		// 0xD0 ~ 0xDF
+		void RET_nFC();		// RET !FC
+		void POP_DE();		// POP DE
+		void JP_nFC_nn();	// JP !FC, nn
+		void Illegal_op_code_D3();	// !!! Illegal op code, should not be encountered
+		void CALL_nFC_nn();	// CALL !FC, nn
+		void PUSH_DE();		// PUSH DE
+		void SUB_A_n();		// SUB A, n
+		void RST_10();		// RST 0x10
+		void RET_FC();		// RET FC
+		void RETI();		// RETI
+		void JP_FC_nn();	// JP FC, nn
+		void Illegal_op_code_DB(); // !!! Illegal op code, should not be encountered
+		void CALL_FC_nn();	// CALL FC, nn
+		void Illegal_op_code_DD(); // !!! Illegal op code, should not be encountered
+		void SBC_A_n();		// SBC A, n
+		void RST_18();		// RST 0x18
+		// 0xE0 ~ 0xEF
+		void LDH_mn_A();	// LDH (n), A
+		void POP_HL();		// POP HL
+		void LD_mC_A();		// LD (C), A
+		void Illegal_op_code_E3(); // !!! Illegal op code, should not be encountered
+		void Illegal_op_code_E4(); // !!! Illegal op code, should not be encountered
+		void PUSH_HL();		// PUSH HL
+		void AND_n();		// AND n
+		void RST_20();		// RST 0x20
+		void ADD_SP_n();	// ADD SP, n
+		void JP_mHL();		// JP (HL)
+		void LD_n_A();		// LD n, A
+		void Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
+		void Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
+		void Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
+		void XOR_n();		// XOR n
+		void RST_28();		// RST 0x28
+		// 0xF0 ~ 0xFF
+		void LDH_A_mn();	// LDH A, (n)
+		void POP_AF();		// POP AF
+		void LD_A_mC();		// LD A, (C)
+		void DI();			// DI
+		void Illegal_op_code_F4(); // !!! Illegal op code, should not be encountered
+		void PUSH_AF();		// PUSH AF
+		void OR_n();		// OR n
+		void RST_30();		// RST 0x30
+		void LDHL_SP_n();	// LDHL SP, n
+		void LD_SP_HL();	// LD SP HL
+		void LD_A_mnn();	// LD A, (nn)
+		void EI();			// EI
+		void Illegal_op_code_FC(); // !!! Illegal op code, should not be encountered
+		void Illegal_op_code_FD(); // !!! Illegal op code, should not be encountered
+		void CP_n();		// CP n
+		void RST_38();		// RST 0x38
+
+
+		// 0xCB op codes
 
 	};
 }
