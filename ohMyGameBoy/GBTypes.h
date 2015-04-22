@@ -21,7 +21,7 @@ namespace GameBoy {
 
 	inline word combineByteToWord(byte h, byte l)
 	{
-		auto wh = static_cast<word>(h);
+		word wh = static_cast<word>(h);
 		return static_cast<word>((wh << 8) | l);
 	}
 }

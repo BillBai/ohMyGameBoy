@@ -283,7 +283,7 @@ namespace GameBoy
 
 	void GBCPU::JR_n()
 	{
-		word offset = (word)memoryUnit->readByte(regPC);
+		word offset = static_cast<word>(memoryUnit->readByte(regPC));
 		regPC = regPC + offset;
 	}
 
@@ -910,4 +910,312 @@ namespace GameBoy
 	{
 		regE = regA;
 	}
+
+	// 0x60 ~ 0x6F
+	void GBCPU::LD_H_B()
+	{
+		regH = regB;
+	}
+
+	void GBCPU::LD_H_C()
+	{
+		regH = regC;
+	}
+
+	void GBCPU::LD_H_D()
+	{
+		regH = regD;
+	}
+
+	void GBCPU::LD_H_E()
+	{
+		regH = regE;
+	}
+
+	void GBCPU::LD_H_H()
+	{
+		// nothing to do
+	}
+
+	void GBCPU::LD_H_L()
+	{
+		regH = regL;
+	}
+
+	void GBCPU::LD_H_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regH = memoryUnit->readByte(HL);
+	}
+
+	void GBCPU::LD_H_A()
+	{
+		regH = regA;
+	}
+
+	void GBCPU::LD_L_B()
+	{
+		regL = regB;
+	}
+
+	void GBCPU::LD_L_C()
+	{
+		regL = regC;
+	}
+
+	void GBCPU::LD_L_D()
+	{
+		regL = regD;
+	}
+
+	void GBCPU::LD_L_E()
+	{
+		regL = regE;
+	}
+
+	void GBCPU::LD_L_H()
+	{
+		regL = regH;
+	}
+
+	void GBCPU::LD_L_L()
+	{
+		// nothing to do
+	}
+
+	void GBCPU::LD_L_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regL = memoryUnit->readByte(HL);
+	}
+
+	void GBCPU::LD_L_A()
+	{
+		regL = regA;
+	}
+
+	// 0x70 ~ 0x7F
+	void GBCPU::LD_mHL_B()
+	{
+		word HL = combineByteToWord(regH, regL);
+
+	}
+
+	void GBCPU::LD_mHL_C()
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regC);
+	}
+
+	void GBCPU::LD_mHL_D();
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regD);
+	}
+	void GBCPU::LD_mHL_E()
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regE);
+	}
+
+	void GBCPU::LD_mHL_H()
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regH);
+	}
+
+	void GBCPU::LD_mHL_L()
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regL);
+	}
+
+	void GBCPU::HALT()
+	{
+		// TODO: implement this later
+	}
+
+	void GBCPU::LD_mHL_A();
+	{
+		word HL = combineByteToWord(regH, regL);
+		memoryUnit->writeByte(HL, regA);
+	}
+
+	void GBCPU::LD_A_B()
+	{
+		regA = regB;
+	}
+
+	void GBCPU::LD_A_C()
+	{
+		regA = regB;
+	}
+
+	void GBCPU::LD_A_D()
+	{
+		regA = regD;
+	}
+
+	void GBCPU::LD_A_E()
+	{
+		regA = regE;
+	}
+
+	void GBCPU::LD_A_H()
+	{
+		regA = regH;
+	}
+
+	void GBCPU::LD_A_L()
+	{
+		regA = regL;
+	}
+
+	void GBCPU::LD_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regA = memoryUnit->readByte(HL);
+	}
+
+	void GBCPU::LD_A_A()
+	{
+		// nothing  to do
+	}
+
+	// 0x80 ~ 0x8F
+	void GBCPU::ADD_A_B();	
+	void GBCPU::ADD_A_C();	
+	void GBCPU::ADD_A_D();	
+	void GBCPU::ADD_A_E();	
+	void GBCPU::ADD_A_H();	
+	void GBCPU::ADD_A_L();	
+	void GBCPU::ADD_A_mHL();
+	void GBCPU::ADD_A_A();	
+	void GBCPU::ADC_A_B();	
+	void GBCPU::ADC_A_C();	
+	void GBCPU::ADC_A_D();	
+	void GBCPU::ADC_A_E();	
+	void GBCPU::ADC_A_H();	
+	void GBCPU::ADC_A_L();	
+	void GBCPU::ADC_A_mHL()
+	void GBCPU::ADC_A_A();	
+	// 0x90 ~ 0x9F
+	void SUB_A_B();	
+	void SUB_A_C();	
+	void SUB_A_D();	
+	void SUB_A_E();	
+	void SUB_A_H();	
+	void SUB_A_L();	
+	void SUB_A_mHL()
+	void SUB_A_A();	
+	void SBC_A_B();	
+	void SBC_A_C();	
+	void SBC_A_D();	
+	void SBC_A_E();	
+	void SBC_A_H();	
+	void SBC_A_L();	
+	void SBC_A_mHL()
+	void SBC_A_A();	
+	// 0xA0 ~ 0xAF
+	void AND_B();	
+	void AND_C();	
+	void AND_D();	
+	void AND_E();	
+	void AND_H();	
+	void AND_L();	
+	void AND_mHL();	
+	void AND_A();	
+	void XOR_B();	
+	void XOR_C();	
+	void XOR_D();	
+	void XOR_E();	
+	void XOR_H();	
+	void XOR_L();	
+	void XOR_mHL();	
+	void XOR_A();	
+	// 0xB0 ~ 0xBF
+	void OR_B();	
+	void OR_C();	
+	void OR_D();	
+	void OR_E();	
+	void OR_H();	
+	void OR_L();	
+	void OR_mHL();	
+	void OR_A();	
+	void CP_B();	
+	void CP_C();	
+	void CP_D();	
+	void CP_E();	
+	void CP_H();	
+	void CP_L();	
+	void CP_mHL();	
+	void CP_A();	
+	// 0xC0 ~ 0xCF
+	void RET_nFZ();	
+	void POP_BC();
+	void JP_nFZ_nn();	
+	void JP_nn();		
+	void CALL_nFZ_nn();	
+	void PUSH_BC();		
+	void ADD_n();		
+	void RST_0();		
+	void RET_FZ();		
+	void RET();			
+	void JP_FZ_nn();	
+	void CB_op_code();	
+	void CALL_FZ_nn();	
+	void CALL_nn();		
+	void ADC_A_n();		
+	void RST_8();		
+	// 0xD0 ~ 0xDF
+	void RET_nFC();		
+	void POP_DE();		
+	void JP_nFC_nn();	
+	void Illegal_op_code_D3();	// !!! Illegal op code, should not be encountered
+	void CALL_nFC_nn();	
+	void PUSH_DE();		
+	void SUB_A_n();		
+	void RST_10();		
+	void RET_FC();		
+	void RETI();		
+	void JP_FC_nn();	
+	void Illegal_op_code_DB(); // !!! Illegal op code, should not be encountered
+	void CALL_FC_nn();	// CALL FC, nn
+	void Illegal_op_code_DD(); // !!! Illegal op code, should not be encountered
+	void SBC_A_n();		// SBC A, n
+	void RST_18();		// RST 0x18
+	// 0xE0 ~ 0xEF
+	void LDH_mn_A();	// LDH (n), A
+	void POP_HL();		// POP HL
+	void LD_mC_A();		// LD (C), A
+	void Illegal_op_code_E3(); // !!! Illegal op code, should not be encountered
+	void Illegal_op_code_E4(); // !!! Illegal op code, should not be encountered
+	void PUSH_HL();		// PUSH HL
+	void AND_n();		// AND n
+	void RST_20();		// RST 0x20
+	void ADD_SP_n();	// ADD SP, n
+	void JP_mHL();		// JP (HL)
+	void LD_n_A();		// LD n, A
+	void Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
+	void Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
+	void Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
+	void XOR_n();		// XOR n
+	void RST_28();		// RST 0x28
+	// 0xF0 ~ 0xFF
+	void LDH_A_mn();	// LDH A, (n)
+	void POP_AF();		// POP AF
+	void LD_A_mC();		// LD A, (C)
+	void DI();			// DI
+	void Illegal_op_code_F4(); // !!! Illegal op code, should not be encountered
+	void PUSH_AF();		// PUSH AF
+	void OR_n();		// OR n
+	void RST_30();		// RST 0x30
+	void LDHL_SP_n();	// LDHL SP, n
+	void LD_SP_HL();	// LD SP HL
+	void LD_A_mnn();	// LD A, (nn)
+	void EI();			// EI
+	void Illegal_op_code_FC(); // !!! Illegal op code, should not be encountered
+	void Illegal_op_code_FD(); // !!! Illegal op code, should not be encountered
+	void CP_n();		// CP n
+	void RST_38();		// RST 0x38
 }
