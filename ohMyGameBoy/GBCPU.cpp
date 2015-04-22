@@ -746,22 +746,88 @@ namespace GameBoy
 	}
 
 	// 0x40 ~ 0x4F
-	void LD_B_B();
-	void LD_B_C();
-	void LD_B_D();
-	void LD_B_E();
-	void LD_B_H();
-	void LD_B_L();
-	void LD_B_mHL();
-	void LD_B_A();
-	void LD_C_B();
-	void LD_C_C();
-	void LD_C_D();
-	void LD_C_E();
-	void LD_C_H();
-	void LD_C_L();
-	void LD_C_mHL();
-	void LD_C_A();
+	void GBCPU::LD_B_B()
+	{
+		// Nothing to be done
+	}
+
+	void GBCPU::LD_B_C()
+	{
+		regB = regC;
+	}
+
+	void GBCPU::LD_B_D()
+	{
+		regB = regD;
+	}
+
+	void GBCPU::LD_B_E()
+	{
+		regB = regE;
+	}
+
+	void GBCPU::LD_B_H()
+	{
+		regB = regH;
+	}
+
+	void GBCPU::LD_B_L()
+	{
+		regB = regL;
+	}
+
+	void GBCPU::LD_B_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regB = memoryUnit->readByte(HL);
+	}
+
+	void GBCPU::LD_B_A()
+	{
+		regB = regA;
+	}
+
+	void GBCPU::LD_C_B()
+	{
+		regC = regB;
+	}
+
+	void GBCPU::LD_C_C()
+	{
+		// Nothing to be done
+	}
+
+	void GBCPU::LD_C_D()
+	{
+		regC = regD;
+	}
+
+	void GBCPU::LD_C_E()
+	{
+		regC = regE;
+	}
+
+	void GBCPU::LD_C_H()
+	{
+		regC = regH;
+	}
+
+	void GBCPU::LD_C_L()
+	{
+		regC = regL;
+	}
+
+	void GBCPU::LD_C_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		regC = memoryUnit->readByte(HL);
+	}
+
+	void GBCPU::LD_C_A()
+	{
+		regC = regA;
+	}
+
 	// 0x50 ~ 0x5F
 	void LD_D_B();
 	void LD_D_C();

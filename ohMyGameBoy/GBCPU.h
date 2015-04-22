@@ -3,7 +3,8 @@
 #include "GBTypes.h"
 #include "GBMemoryUnit.h"
 
-namespace GameBoy {
+namespace GameBoy
+{
 	class GBCPU
 	{
 	public:
@@ -39,14 +40,24 @@ namespace GameBoy {
 		word regPC;
 		// flag register
 		byte regFlag;
-		void setZeroFlag()			{ regFlag = regFlag | 0x80; }
-		void clearZeroFlag()		{ regFlag = regFlag & 0x7F; }
-		void setSubtractFlag()		{ regFlag = regFlag | 0x40; }
-		void clearSubtractFlag()	{ regFlag = regFlag & 0xBF; }
-		void setHalfCarryFlag()		{ regFlag = regFlag | 0x20; }
-		void clearHalfCarryFlag()	{ regFlag = regFlag & 0xDF; }
-		void setCarryFlag()			{ regFlag = regFlag | 0x10; }
-		void clearCarryFlag()		{ regFlag = regFlag & 0xEF; }
+
+		// flag helpers
+		void setZeroFlag()				{ regFlag = regFlag | 0x80; }
+		void clearZeroFlag()			{ regFlag = regFlag & 0x7F; }
+		void changeZeroFlag(bool b)		{ regFlag = b ? (regFlag | 0x80) : (regFlag & 0x7F); }
+
+		void setSubtractFlag()				{ regFlag = regFlag | 0x40; }
+		void clearSubtractFlag()			{ regFlag = regFlag & 0xBF; }
+		void changeSubtractFlag(bool b)		{ regFlag = b ? (regFlag | 0x40) : (regFlag & 0xBF); }
+
+		void setHalfCarryFlag()				{ regFlag = regFlag | 0x20; }
+		void clearHalfCarryFlag()			{ regFlag = regFlag & 0xDF; }
+		void changeHalfCarryFlag(bool b)	{ regFlag = b ? (regFlag | 0x20) : (regFlag & 0xDF); }
+
+		void setCarryFlag()					{ regFlag = regFlag | 0x10; }
+		void clearCarryFlag()				{ regFlag = regFlag & 0xEF; }
+		void changeCarryFlag(bool b)		{ regFlag = b ? (regFlag | 0x10) : (regFlag & 0xEF); }
+
 
 		// Memory
 		GBMemoryUnit *memoryUnit;
