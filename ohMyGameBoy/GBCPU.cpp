@@ -1035,7 +1035,7 @@ namespace GameBoy
 		// TODO: implement this later
 	}
 
-	void GBCPU::LD_mHL_A();
+	void GBCPU::LD_mHL_A()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regA);
@@ -1085,7 +1085,6 @@ namespace GameBoy
 	// 0x80 ~ 0x8F
 	void GBCPU::ADD_A_B()
 	{
-		// NOTE: need fix
 		byte sum = regA + regB;
 		
 		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
@@ -1179,31 +1178,322 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_B();	
-	void GBCPU::ADC_A_C();	
-	void GBCPU::ADC_A_D();	
-	void GBCPU::ADC_A_E();	
-	void GBCPU::ADC_A_H();	
-	void GBCPU::ADC_A_L();	
-	void GBCPU::ADC_A_mHL();
-	void GBCPU::ADC_A_A();	
+	void GBCPU::ADC_A_B()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regB + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regB & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regB));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_C()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regC + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regC & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regC));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_D()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regD + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regD & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regD));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_E()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regE + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regE & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regE));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_H()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regH + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regH & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regH));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_L()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + regL + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regL & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < regL));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(HL);
+
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = regA + tmp + carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (tmp & 0x0F) + carry > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < tmp));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADC_A_A()
+	{
+		byte carry = (getCarryFlag() ? 1 : 0);
+		byte sum = (regA << 1) | carry;
+
+		changeHalfCarryFlag((regA & 0x0F) + (regL & 0x0F) + carry > 0x0F);
+		changeCarryFlag(regA > 0xEF);
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
 	// 0x90 ~ 0x9F
-	void SUB_A_B();	
-	void SUB_A_C();	
-	void SUB_A_D();	
-	void SUB_A_E();	
-	void SUB_A_H();	
-	void SUB_A_L();	
-	void SUB_A_mHL();
-	void SUB_A_A();	
-	void SBC_A_B();	
-	void SBC_A_C();	
-	void SBC_A_D();	
-	void SBC_A_E();	
-	void SBC_A_H();	
-	void SBC_A_L();	
-	void SBC_A_mHL()
-	void SBC_A_A();	
+	void GBCPU::SUB_A_B()
+	{
+		byte diff = regA - regB;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regB));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_C()
+	{
+		byte diff = regA - regC;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regC));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_D()
+	{
+		byte diff = regA - regD;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regD));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_E()
+	{
+		byte diff = regA - regE;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regE));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_H()
+	{
+		byte diff = regA - regH;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regH));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_L()
+	{
+		byte diff = regA - regL;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > regL));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(HL);
+
+		byte diff = regA - tmp;
+
+		changeHalfCarryFlag((regA & 0x0F) < (diff & 0x0F));
+		changeCarryFlag((diff > regA) || (diff > tmp));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SUB_A_A()
+	{
+		// regA - regA must be 0
+		regA = 0;
+		clearHalfCarryFlag();
+		clearCarryFlag();
+		setZeroFlag();
+		setSubtractFlag();
+	}
+
+	void GBCPU::SBC_A_B()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regB - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regB & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regB));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_C()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regC - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regC & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regC));
+		changeZeroFlag(diff == 0);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_D()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regD - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regD & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regD));
+		changeZeroFlag(diff);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_E()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regE - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regE & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regE));
+		changeZeroFlag(diff);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_H()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regH - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regH & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regH));
+		changeZeroFlag(diff);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_L()
+	{
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - regL - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (regL & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > regL));
+		changeZeroFlag(diff);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(HL);
+
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte diff = regA - tmp - carry;
+
+		changeHalfCarryFlag((regA & 0x0F) < (tmp & 0x0F) + carry);
+		changeCarryFlag((diff > regA) || (diff > tmp));
+		changeZeroFlag(diff);
+		setSubtractFlag();
+
+		regA = diff;
+	}
+
+	void GBCPU::SBC_A_A()
+	{
+		if (getCarryFlag()) {
+			clearZeroFlag();
+			setSubtractFlag();
+			setHalfCarryFlag();
+			setCarryFlag();
+			regA = 0xFF;
+		} else {
+			clearHalfCarryFlag();
+			clearCarryFlag();
+			setSubtractFlag();
+			setZeroFlag();
+			regA = 0;
+		}
+	}
+
 	// 0xA0 ~ 0xAF
 	void AND_B();	
 	void AND_C();	
