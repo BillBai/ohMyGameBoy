@@ -35,5 +35,8 @@
     <ClInclude Include="GBTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BIOS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

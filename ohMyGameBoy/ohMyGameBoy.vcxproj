@@ -69,6 +69,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BIOS.h" />
     <ClInclude Include="GBCPU.h" />
     <ClInclude Include="GBMemoryUnit.h" />
     <ClInclude Include="GBTypes.h" />

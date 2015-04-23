@@ -998,7 +998,7 @@ namespace GameBoy
 	void GBCPU::LD_mHL_B()
 	{
 		word HL = combineByteToWord(regH, regL);
-
+		memoryUnit->writeByte(HL, regB);
 	}
 
 	void GBCPU::LD_mHL_C()
@@ -1007,7 +1007,7 @@ namespace GameBoy
 		memoryUnit->writeByte(HL, regC);
 	}
 
-	void GBCPU::LD_mHL_D();
+	void GBCPU::LD_mHL_D()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regD);
@@ -1083,21 +1083,109 @@ namespace GameBoy
 	}
 
 	// 0x80 ~ 0x8F
-	void GBCPU::ADD_A_B();	
-	void GBCPU::ADD_A_C();	
-	void GBCPU::ADD_A_D();	
-	void GBCPU::ADD_A_E();	
-	void GBCPU::ADD_A_H();	
-	void GBCPU::ADD_A_L();	
-	void GBCPU::ADD_A_mHL();
-	void GBCPU::ADD_A_A();	
+	void GBCPU::ADD_A_B()
+	{
+		// NOTE: need fix
+		byte sum = regA + regB;
+		
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regB));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADD_A_C()
+	{
+		byte sum = regA + regC;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regC));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADD_A_D()
+	{
+		byte sum = regA + regD;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regD));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADD_A_E()
+	{
+		byte sum = regA + regE;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regE));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADD_A_H()
+	{
+		byte sum = regA + regH;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regH));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+	void GBCPU::ADD_A_L()
+	{
+		byte sum = regA + regL;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < regL));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
+	void GBCPU::ADD_A_mHL()
+	{
+		word HL = combineByteToWord(regH, regL);
+		byte tmp = memoryUnit->readByte(HL);
+		byte sum = regA + tmp;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < tmp));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+	}
+
+	void GBCPU::ADD_A_A()
+	{
+		byte sum = regA << 1;
+
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA));
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+
+		regA = sum;
+	}
+
 	void GBCPU::ADC_A_B();	
 	void GBCPU::ADC_A_C();	
 	void GBCPU::ADC_A_D();	
 	void GBCPU::ADC_A_E();	
 	void GBCPU::ADC_A_H();	
 	void GBCPU::ADC_A_L();	
-	void GBCPU::ADC_A_mHL()
+	void GBCPU::ADC_A_mHL();
 	void GBCPU::ADC_A_A();	
 	// 0x90 ~ 0x9F
 	void SUB_A_B();	
@@ -1106,7 +1194,7 @@ namespace GameBoy
 	void SUB_A_E();	
 	void SUB_A_H();	
 	void SUB_A_L();	
-	void SUB_A_mHL()
+	void SUB_A_mHL();
 	void SUB_A_A();	
 	void SBC_A_B();	
 	void SBC_A_C();	
