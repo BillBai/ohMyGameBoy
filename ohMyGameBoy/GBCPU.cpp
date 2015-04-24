@@ -1718,20 +1718,77 @@ namespace GameBoy
 
 	void GBCPU::CP_B()
 	{
-		byte sum = regA - regC;
+		byte sum = regA - regB;
 		changeHalfCarryFlag((sum &0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regB > regA);
+	}
+
+	void GBCPU::CP_C()
+	{
+		byte sum = regA - regC;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
 		changeZeroFlag(sum == 0);
 		setSubtractFlag();
 		changeCarryFlag(regC > regA);
 	}
 
-	void GBCPU::CP_C();	
-	void GBCPU::CP_D();	
-	void GBCPU::CP_E();	
-	void GBCPU::CP_H();	
-	void GBCPU::CP_L();	
-	void GBCPU::CP_mHL();	
-	void GBCPU::CP_A();	
+	void GBCPU::CP_D()
+	{
+		byte sum = regA - regD;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regD > regA);
+	}
+
+	void GBCPU::CP_E()
+	{
+		byte sum = regA - regE;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regE > regA);
+	}
+
+	void GBCPU::CP_H()
+	{
+		byte sum = regA - regH;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regH > regA);
+	}
+
+	void GBCPU::CP_L()
+	{
+		byte sum = regA - regL;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regL > regA);
+	}
+
+	void GBCPU::CP_mHL()
+	{
+		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
+		byte sum = regA - tmp;
+		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(tmp > regA);
+	}
+
+	void GBCPU::CP_A()
+	{
+		// a == a
+		clearHalfCarryFlag();
+		clearCarryFlag();
+		setZeroFlag();
+		setSubtractFlag();
+	}
+
 	// 0xC0 ~ 0xCF
 	void RET_nFZ();	
 	void POP_BC();
