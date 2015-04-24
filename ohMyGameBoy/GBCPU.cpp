@@ -1495,22 +1495,30 @@ namespace GameBoy
 	}
 
 	// 0xA0 ~ 0xAF
-	void AND_B();	
-	void AND_C();	
-	void AND_D();	
-	void AND_E();	
-	void AND_H();	
-	void AND_L();	
-	void AND_mHL();	
-	void AND_A();	
-	void XOR_B();	
-	void XOR_C();	
-	void XOR_D();	
-	void XOR_E();	
-	void XOR_H();	
-	void XOR_L();	
-	void XOR_mHL();	
-	void XOR_A();	
+	void GBCPU::AND_B()
+	{
+		regA &= regB;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_C();	
+	void GBCPU::AND_D();	
+	void GBCPU::AND_E();	
+	void GBCPU::AND_H();	
+	void GBCPU::AND_L();	
+	void GBCPU::AND_mHL();	
+	void GBCPU::AND_A();	
+	void GBCPU::XOR_B();	
+	void GBCPU::XOR_C();	
+	void GBCPU::XOR_D();	
+	void GBCPU::XOR_E();	
+	void GBCPU::XOR_H();	
+	void GBCPU::XOR_L();	
+	void GBCPU::XOR_mHL();	
+	void GBCPU::XOR_A();	
 	// 0xB0 ~ 0xBF
 	void OR_B();	
 	void OR_C();	
