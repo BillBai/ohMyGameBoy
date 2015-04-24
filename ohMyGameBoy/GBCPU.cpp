@@ -1716,7 +1716,15 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::CP_B();	
+	void GBCPU::CP_B()
+	{
+		byte sum = regA - regC;
+		changeHalfCarryFlag((sum &0x0F) > (regA & 0x0F));
+		changeZeroFlag(sum == 0);
+		setSubtractFlag();
+		changeCarryFlag(regC > regA);
+	}
+
 	void GBCPU::CP_C();	
 	void GBCPU::CP_D();	
 	void GBCPU::CP_E();	
