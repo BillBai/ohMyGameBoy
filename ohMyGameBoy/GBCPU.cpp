@@ -1504,38 +1504,226 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_C();	
-	void GBCPU::AND_D();	
-	void GBCPU::AND_E();	
-	void GBCPU::AND_H();	
-	void GBCPU::AND_L();	
-	void GBCPU::AND_mHL();	
-	void GBCPU::AND_A();	
-	void GBCPU::XOR_B();	
-	void GBCPU::XOR_C();	
-	void GBCPU::XOR_D();	
-	void GBCPU::XOR_E();	
-	void GBCPU::XOR_H();	
-	void GBCPU::XOR_L();	
-	void GBCPU::XOR_mHL();	
-	void GBCPU::XOR_A();	
+	void GBCPU::AND_C()
+	{
+		regA &= regC;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_D()
+	{
+		regA &= regD;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_E()
+	{
+		regA &= regE;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_H()
+	{
+		regA &= regH;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_L()
+	{
+		regA &= regL;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_mHL()
+	{
+		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
+		regA &= tmp;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::AND_A()
+	{
+		// regA & regA always equal regA, so regA remains same.
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_B()
+	{
+		regA ^= regB;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_C()
+	{
+		regA ^= regC;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_D()
+	{
+		regA ^= regD;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_E()
+	{
+		regA ^= regE;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_H()
+	{
+		regA ^= regH;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_L()
+	{
+		regA ^= regL;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_mHL()
+	{
+		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
+		regA ^= tmp;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::XOR_A()
+	{
+		// a XOR a always be 0, so set regA to zero.
+		regA = 0;
+		setZeroFlag();
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
 	// 0xB0 ~ 0xBF
-	void OR_B();	
-	void OR_C();	
-	void OR_D();	
-	void OR_E();	
-	void OR_H();	
-	void OR_L();	
-	void OR_mHL();	
-	void OR_A();	
-	void CP_B();	
-	void CP_C();	
-	void CP_D();	
-	void CP_E();	
-	void CP_H();	
-	void CP_L();	
-	void CP_mHL();	
-	void CP_A();	
+	void GBCPU::OR_B()
+	{
+		regA |= regB;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_C()
+	{
+		regA |= regC;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_D()
+	{
+		regA |= regD;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_E()
+	{
+		regA |= regE;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_H()
+	{
+		regA |= regH;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_L()
+	{
+		regA |= regL;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_mHL()
+	{
+		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
+		regA |= tmp;
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::OR_A()
+	{
+		// a | a == a
+		changeZeroFlag(regA == 0);
+		clearHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::CP_B();	
+	void GBCPU::CP_C();	
+	void GBCPU::CP_D();	
+	void GBCPU::CP_E();	
+	void GBCPU::CP_H();	
+	void GBCPU::CP_L();	
+	void GBCPU::CP_mHL();	
+	void GBCPU::CP_A();	
 	// 0xC0 ~ 0xCF
 	void RET_nFZ();	
 	void POP_BC();
