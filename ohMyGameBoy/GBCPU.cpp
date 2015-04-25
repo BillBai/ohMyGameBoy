@@ -1790,22 +1790,51 @@ namespace GameBoy
 	}
 
 	// 0xC0 ~ 0xCF
-	void RET_nFZ();	
-	void POP_BC();
-	void JP_nFZ_nn();	
-	void JP_nn();		
-	void CALL_nFZ_nn();	
-	void PUSH_BC();		
-	void ADD_n();		
-	void RST_0();		
-	void RET_FZ();		
-	void RET();			
-	void JP_FZ_nn();	
-	void CB_op_code();	
-	void CALL_FZ_nn();	
-	void CALL_nn();		
-	void ADC_A_n();		
-	void RST_8();		
+	void GBCPU::RET_nFZ()
+	{
+		if (!getZeroFlag()) {
+			regPC = memoryUnit->readWord(regSP);
+			regSP += 2;
+		}
+	}
+
+	void GBCPU::POP_BC()
+	{
+		regC = memoryUnit->readByte(regSP);
+		regB = memoryUnit->readByte(regSP + 1);
+		regSP += 2;
+	}
+
+	void GBCPU::JP_nFZ_nn()
+	{
+		if (!getZeroFlag()) {
+			regPC = memoryUnit->readWord(regPC);
+		} else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::JP_nn()
+	{
+		regPC = memoryUnit->readWord(regPC);
+	}
+
+	void GBCPU::CALL_nFZ_nn()
+	{
+		
+	}
+
+	void GBCPU::PUSH_BC();		
+	void GBCPU::ADD_n();		
+	void GBCPU::RST_0();		
+	void GBCPU::RET_FZ();		
+	void GBCPU::RET();			
+	void GBCPU::JP_FZ_nn();	
+	void GBCPU::CB_op_code();	
+	void GBCPU::CALL_FZ_nn();	
+	void GBCPU::CALL_nn();		
+	void GBCPU::ADC_A_n();		
+	void GBCPU::RST_8();		
 	// 0xD0 ~ 0xDF
 	void RET_nFC();		
 	void POP_DE();		
