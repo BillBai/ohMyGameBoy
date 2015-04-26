@@ -1821,12 +1821,42 @@ namespace GameBoy
 
 	void GBCPU::CALL_nFZ_nn()
 	{
-		
+		if (!getZeroFlag()) {
+			word targetPC = memoryUnit->readWord(regPC);
+			regPC += 2;
+			regSP -= 2;
+			memoryUnit->writeWord(regSP, regPC);
+			regPC = targetPC;
+		}
 	}
 
-	void GBCPU::PUSH_BC();		
-	void GBCPU::ADD_n();		
-	void GBCPU::RST_0();		
+	void GBCPU::PUSH_BC()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, combineByteToWord(regB, regC));
+	}
+
+	void GBCPU::ADD_n()
+	{
+		byte tmp = memoryUnit->readByte(regPC);
+		byte sum = regA + tmp;
+		regPC += 1;
+		
+		changeHalfCarryFlag((sum & 0x0F) < (regA & 0x0F));
+		changeCarryFlag((sum < regA) || (sum < tmp));
+		
+		regA = sum;
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+	}
+
+	void GBCPU::RST_0()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0;
+	}
+
 	void GBCPU::RET_FZ();		
 	void GBCPU::RET();			
 	void GBCPU::JP_FZ_nn();	
