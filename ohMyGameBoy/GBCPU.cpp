@@ -1911,27 +1911,162 @@ namespace GameBoy
 
 	void GBCPU::ADC_A_n()
 	{
-		
+		byte carry = getCarryFlag() ? 1 : 0;
+		byte tmp = memoryUnit->readByte(regPC);
+		byte sum = regA + tmp + carry;
+		regPC += 1;
+
+		changeHalfCarryFlag(((regA & 0x0F) + (tmp & 0x0F) + carry) > 0x0F);
+		changeCarryFlag((sum < regA) || (sum < tmp) || (sum < carry));
+
+		regA = sum;
+		changeZeroFlag(regA == 0);
+
+		clearSubtractFlag();
 	}
 
-	void GBCPU::RST_8();		
+	void GBCPU::RST_8()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0x8;
+	}
+
 	// 0xD0 ~ 0xDF
-	void RET_nFC();		
-	void POP_DE();		
-	void JP_nFC_nn();	
-	void Illegal_op_code_D3();	// !!! Illegal op code, should not be encountered
-	void CALL_nFC_nn();	
-	void PUSH_DE();		
-	void SUB_A_n();		
-	void RST_10();		
-	void RET_FC();		
-	void RETI();		
-	void JP_FC_nn();	
-	void Illegal_op_code_DB(); // !!! Illegal op code, should not be encountered
-	void CALL_FC_nn();	// CALL FC, nn
-	void Illegal_op_code_DD(); // !!! Illegal op code, should not be encountered
-	void SBC_A_n();		// SBC A, n
-	void RST_18();		// RST 0x18
+	void GBCPU::RET_nFC()
+	{
+		if (!getZeroFlag()) {
+			regPC = memoryUnit->readWord(regSP);
+			regSP += 2;
+		}
+	}
+
+	void GBCPU::POP_DE()
+	{
+		regD = memoryUnit->readByte(regSP + 1);
+		regE = memoryUnit->readByte(regSP);
+		regSP += 2;
+	}
+
+	void GBCPU::JP_nFC_nn()
+	{
+		if (!getZeroFlag()) {
+			regPC = memoryUnit->readWord(regSP);
+		} else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::Illegal_op_code_D3()	// !!! Illegal op code, should not be encountered
+	{
+		// TODO: 
+	}
+
+	void GBCPU::CALL_nFC_nn()
+	{
+		if (!getCarryFlag()) {
+			word targetPC = memoryUnit->readWord(regPC);
+			regSP -= 2;
+			memoryUnit->writeWord(regSP, regPC + 2); // store next instruction to stack
+			regPC = targetPC;
+		} else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::PUSH_DE()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, combineByteToWord(regD, regE));
+	}
+
+	void GBCPU::SUB_A_n()
+	{
+		byte tmp = memoryUnit->readByte(regPC);
+		byte sum = regA - tmp;
+		regPC += 1;
+		changeHalfCarryFlag((regA & 0x0F) < (sum & 0x0F));
+		changeCarryFlag(tmp > regA);
+		changeZeroFlag(sum == 0);
+		regA = sum;
+		clearSubtractFlag();
+	}
+
+	void GBCPU::RST_10()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0x10;
+	}
+
+	void GBCPU::RET_FC()
+	{
+		if (getCarryFlag()) {
+			regPC = memoryUnit->readWord(regSP);
+			regSP += 2;
+		}
+	}
+
+	void GBCPU::RETI()
+	{
+		regPC = memoryUnit->readWord(regSP);
+		regSP += 2;
+		// TODO: modify the IRQ
+	}
+
+	void GBCPU::JP_FC_nn()
+	{
+		if (getCarryFlag()) {
+			regPC = memoryUnit->readWord(regPC);
+		}
+		else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::Illegal_op_code_DB() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and halt
+	}
+
+	void GBCPU::CALL_FC_nn()
+	{
+		if (getCarryFlag()) {
+			word targetPC = memoryUnit->readWord(regPC);
+			regSP -= 2;
+			memoryUnit->writeWord(regSP, regPC + 2); // store next instruction to stack
+			regPC = targetPC;
+		}
+		else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::Illegal_op_code_DD() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and halt
+	}
+
+	void GBCPU::SBC_A_n()
+	{
+		byte tmp = memoryUnit->readByte(regPC);
+		byte carry = getCarryFlag() ? 1 : 0;
+		regPC += 1;
+		byte sum = regA - tmp - carry;
+		changeHalfCarryFlag((regA & 0x0F) < ((tmp & 0x0F) + carry));
+		changeCarryFlag((regA < (tmp + carry)) || (tmp == 0xFF));
+		changeZeroFlag(sum == 0);
+		clearSubtractFlag();
+		regA = sum;
+	}
+
+	void GBCPU::RST_18()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0x18;
+	}
+
 	// 0xE0 ~ 0xEF
 	void LDH_mn_A();	// LDH (n), A
 	void POP_HL();		// POP HL
