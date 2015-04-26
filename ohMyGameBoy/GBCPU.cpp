@@ -1827,6 +1827,8 @@ namespace GameBoy
 			regSP -= 2;
 			memoryUnit->writeWord(regSP, regPC);
 			regPC = targetPC;
+		} else {
+			regPC += 2;
 		}
 	}
 
@@ -1857,13 +1859,61 @@ namespace GameBoy
 		regPC = 0;
 	}
 
-	void GBCPU::RET_FZ();		
-	void GBCPU::RET();			
-	void GBCPU::JP_FZ_nn();	
-	void GBCPU::CB_op_code();	
-	void GBCPU::CALL_FZ_nn();	
-	void GBCPU::CALL_nn();		
-	void GBCPU::ADC_A_n();		
+	void GBCPU::RET_FZ()
+	{
+		if (getZeroFlag()) {
+			regPC = memoryUnit->readWord(regSP);
+			regSP += 2;
+		}
+	}
+
+	void GBCPU::RET()
+	{
+		regPC = memoryUnit->readWord(regSP);
+		regSP += 2;
+	}
+
+	void GBCPU::JP_FZ_nn()
+	{
+		if (getZeroFlag()) {
+			regPC = memoryUnit->readWord(regPC);
+		} else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::CB_op_code()
+	{
+		// TODO: run CB op codes
+	}
+
+	void GBCPU::CALL_FZ_nn()
+	{
+		if (getZeroFlag()) {
+			word targetPC = memoryUnit->readWord(regPC);
+			regPC += 2;
+			regSP -= 2;
+			memoryUnit->writeWord(regSP, regPC);
+			regPC = targetPC;
+		} else {
+			regPC += 2;
+		}
+	}
+
+	void GBCPU::CALL_nn()
+	{
+		word targetPC = memoryUnit->readWord(regPC);
+		regPC += 2;
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = targetPC;
+	}
+
+	void GBCPU::ADC_A_n()
+	{
+		
+	}
+
 	void GBCPU::RST_8();		
 	// 0xD0 ~ 0xDF
 	void RET_nFC();		
