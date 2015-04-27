@@ -2068,37 +2068,84 @@ namespace GameBoy
 	}
 
 	// 0xE0 ~ 0xEF
-	void LDH_mn_A();	// LDH (n), A
-	void POP_HL();		// POP HL
-	void LD_mC_A();		// LD (C), A
-	void Illegal_op_code_E3(); // !!! Illegal op code, should not be encountered
-	void Illegal_op_code_E4(); // !!! Illegal op code, should not be encountered
-	void PUSH_HL();		// PUSH HL
-	void AND_n();		// AND n
-	void RST_20();		// RST 0x20
-	void ADD_SP_n();	// ADD SP, n
-	void JP_mHL();		// JP (HL)
-	void LD_n_A();		// LD n, A
-	void Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
-	void Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
-	void Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
-	void XOR_n();		// XOR n
-	void RST_28();		// RST 0x28
+	void GBCPU::LDH_mn_A()
+	{
+		word addr = 0xFF00 + static_cast<word>(memoryUnit->readByte(regPC));
+		memoryUnit->writeByte(addr, regA);
+		regPC += 1;
+	}
+
+	void GBCPU::POP_HL()
+	{
+		regH = memoryUnit->readByte(regSP + 1);
+		regL = memoryUnit->readByte(regSP);
+		regSP += 2;
+	}
+
+	void GBCPU::LD_mC_A()
+	{
+		word addr = 0xFF00 + static_cast<word>(regC);
+		memoryUnit->writeByte(addr, regA);
+	}
+	void GBCPU::Illegal_op_code_E3() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and halt
+	}
+	void GBCPU::Illegal_op_code_E4() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and halt
+	}
+
+	void GBCPU::PUSH_HL()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, combineByteToWord(regH, regL));
+	}
+
+	void GBCPU::AND_n()
+	{
+		byte tmp = memoryUnit->readByte(regPC);
+		regA &= tmp;
+		regPC += 1;
+		changeZeroFlag(regA == 0);
+		setHalfCarryFlag();
+		clearSubtractFlag();
+		clearCarryFlag();
+	}
+
+	void GBCPU::RST_20()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0x20;
+	}
+
+	void GBCPU::ADD_SP_n()
+	{
+		
+	}
+	void GBCPU::JP_mHL();		
+	void GBCPU::LD_n_A();		
+	void GBCPU::Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
+	void GBCPU::Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
+	void GBCPU::Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
+	void GBCPU::XOR_n();		
+	void GBCPU::RST_28();		
 	// 0xF0 ~ 0xFF
-	void LDH_A_mn();	// LDH A, (n)
-	void POP_AF();		// POP AF
-	void LD_A_mC();		// LD A, (C)
-	void DI();			// DI
-	void Illegal_op_code_F4(); // !!! Illegal op code, should not be encountered
-	void PUSH_AF();		// PUSH AF
-	void OR_n();		// OR n
-	void RST_30();		// RST 0x30
-	void LDHL_SP_n();	// LDHL SP, n
-	void LD_SP_HL();	// LD SP HL
-	void LD_A_mnn();	// LD A, (nn)
-	void EI();			// EI
-	void Illegal_op_code_FC(); // !!! Illegal op code, should not be encountered
-	void Illegal_op_code_FD(); // !!! Illegal op code, should not be encountered
-	void CP_n();		// CP n
-	void RST_38();		// RST 0x38
+	void GBCPU::LDH_A_mn();	
+	void GBCPU::POP_AF();	
+	void GBCPU::LD_A_mC();	
+	void GBCPU::DI();		
+	void GBCPU::Illegal_op_code_F4(); // !!! Illegal op code, should not be encountered
+	void GBCPU::PUSH_AF();	
+	void GBCPU::OR_n();		
+	void GBCPU::RST_30();	
+	void GBCPU::LDHL_SP_n();
+	void GBCPU::LD_SP_HL();	
+	void GBCPU::LD_A_mnn();	
+	void GBCPU::EI();		
+	void GBCPU::Illegal_op_code_FC(); // !!! Illegal op code, should not be encountered
+	void GBCPU::Illegal_op_code_FD(); // !!! Illegal op code, should not be encountered
+	void GBCPU::CP_n();		
+	void GBCPU::RST_38();	
 }
