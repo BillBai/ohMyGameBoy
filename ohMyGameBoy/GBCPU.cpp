@@ -2122,10 +2122,19 @@ namespace GameBoy
 
 	void GBCPU::ADD_SP_n()
 	{
-		
+		byte tmp = memoryUnit->readByte()
 	}
-	void GBCPU::JP_mHL();		
-	void GBCPU::LD_n_A();		
+
+	void GBCPU::JP_mHL()
+	{
+		regPC = combineByteToWord(regH, regL);
+	}
+	void GBCPU::LD_mnn_A()
+	{
+		word addr = memoryUnit->readWord(regPC);
+		memoryUnit->writeByte(addr, regA);
+		regPC += 2;
+	}
 	void GBCPU::Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
 	void GBCPU::Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
 	void GBCPU::Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered

@@ -313,7 +313,7 @@ namespace GameBoy
 		void RST_20();		// RST 0x20
 		void ADD_SP_n();	// ADD SP, n
 		void JP_mHL();		// JP (HL)
-		void LD_n_A();		// LD n, A
+		void LD_mnn_A();		// LD nn, A
 		void Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
 		void Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
 		void Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
