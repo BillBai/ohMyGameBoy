@@ -2135,10 +2135,30 @@ namespace GameBoy
 		memoryUnit->writeByte(addr, regA);
 		regPC += 2;
 	}
-	void GBCPU::Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
-	void GBCPU::Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
-	void GBCPU::Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
-	void GBCPU::XOR_n();		
+	void GBCPU::Illegal_op_code_EB() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and pause
+	}
+
+	void GBCPU::Illegal_op_code_EC() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and pause
+	}
+	void GBCPU::Illegal_op_code_ED() // !!! Illegal op code, should not be encountered
+	{
+		// TODO: alert and pause
+	}
+
+	void GBCPU::XOR_n()
+	{
+		regA ^= memoryUnit->readByte(regPC);
+		regPC += 1;
+		changeZeroFlag(regA == 0);
+		clearSubtractFlag();
+		clearHalfCarryFlag();
+		clearCarryFlag();
+	}
+
 	void GBCPU::RST_28();		
 	// 0xF0 ~ 0xFF
 	void GBCPU::LDH_A_mn();	
