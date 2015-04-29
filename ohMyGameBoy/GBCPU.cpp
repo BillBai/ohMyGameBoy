@@ -2122,7 +2122,19 @@ namespace GameBoy
 
 	void GBCPU::ADD_SP_n()
 	{
-		byte tmp = memoryUnit->readByte()
+		byte tmp = memoryUnit->readByte(regPC);
+		word signedTmp = static_cast<word>(static_cast<int16_t>(tmp));
+		word sum = regSP + signedTmp;
+		regPC += 1;
+
+		// TODO: check if this is right
+		changeCarryFlag((sum < regSP) || (sum < signedTmp));
+		//changeHalfCarryFlag();
+		clearZeroFlag();
+		clearSubtractFlag();
+
+		regSP = sum;
+
 	}
 
 	void GBCPU::JP_mHL()
@@ -2159,7 +2171,13 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::RST_28();		
+	void GBCPU::RST_28()
+	{
+		regSP -= 2;
+		memoryUnit->writeWord(regSP, regPC);
+		regPC = 0x28;
+	}
+
 	// 0xF0 ~ 0xFF
 	void GBCPU::LDH_A_mn();	
 	void GBCPU::POP_AF();	
