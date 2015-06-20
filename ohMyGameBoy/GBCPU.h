@@ -303,9 +303,9 @@ namespace GameBoy
 		void SBC_A_n();		// SBC A, n
 		void RST_18();		// RST 0x18
 		// 0xE0 ~ 0xEF
-		void LDH_mn_A();	// LDH (n), A
+		void LDH_mn_A();	// LDH (0xFF00 + n), A
 		void POP_HL();		// POP HL
-		void LD_mC_A();		// LD (C), A
+		void LD_mC_A();		// LD (0xFF00 + C), A
 		void Illegal_op_code_E3(); // !!! Illegal op code, should not be encountered
 		void Illegal_op_code_E4(); // !!! Illegal op code, should not be encountered
 		void PUSH_HL();		// PUSH HL
@@ -313,7 +313,7 @@ namespace GameBoy
 		void RST_20();		// RST 0x20
 		void ADD_SP_n();	// ADD SP, n
 		void JP_mHL();		// JP (HL)
-		void LD_n_A();		// LD n, A
+		void LD_mnn_A();		// LD nn, A
 		void Illegal_op_code_EB(); // !!! Illegal op code, should not be encountered
 		void Illegal_op_code_EC(); // !!! Illegal op code, should not be encountered
 		void Illegal_op_code_ED(); // !!! Illegal op code, should not be encountered
