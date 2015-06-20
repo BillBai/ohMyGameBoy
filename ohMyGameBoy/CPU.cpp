@@ -1,41 +1,41 @@
-#include "GBCPU.h"
+#include "CPU.h"
 
 namespace GameBoy
 {
-	GBCPU::GBCPU()
+	CPU::CPU()
 	{
 	}
 
-	GBCPU::~GBCPU()
+	CPU::~CPU()
 	{
 	}
 
 	// nothing to do
-	void GBCPU::NOP()
+	void CPU::NOP()
 	{
 	}
 
-	void GBCPU::LD_BC_nn()
+	void CPU::LD_BC_nn()
 	{
 		regC = memoryUnit->readByte(regSP);
 		regB = memoryUnit->readByte(regSP + 1);
 		regPC += 2;
 	}
 
-	void GBCPU::LD_mBC_A()
+	void CPU::LD_mBC_A()
 	{
 		word addr = combineByteToWord(regB, regC);
 		memoryUnit->writeByte(addr, regA);
 	}
 
-	void GBCPU::INC_BC()
+	void CPU::INC_BC()
 	{
 		word BC = combineByteToWord(regB, regC) + 1;
 		regB = getHighByte(BC);
 		regC = getLowByte(BC);
 	}
 
-	void GBCPU::INC_B()
+	void CPU::INC_B()
 	{
 		regB += 1;
 
@@ -54,7 +54,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_B()
+	void CPU::DEC_B()
 	{
 		regB -= 1;
 
@@ -73,13 +73,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_B_n()
+	void CPU::LD_B_n()
 	{
 		regB = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::RLCA()
+	void CPU::RLCA()
 	{
 		// if regA[7] is 1
 		if (regA > 0x7F) {
@@ -95,14 +95,14 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::LD_mnn_SP()
+	void CPU::LD_mnn_SP()
 	{
 		address addr = memoryUnit->readWord(regPC);
 		memoryUnit->writeWord(addr, regSP);
 		regPC += 2;
 	}
 
-	void GBCPU::ADD_HL_BC()
+	void CPU::ADD_HL_BC()
 	{
 		word HL = combineByteToWord(regH, regL);
 		word BC = combineByteToWord(regB, regC);
@@ -126,19 +126,19 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::LD_A_mBC()
+	void CPU::LD_A_mBC()
 	{
 		regA = memoryUnit->readByte(combineByteToWord(regB, regC));
 	}
 
-	void GBCPU::DEC_BC()
+	void CPU::DEC_BC()
 	{
 		word tmp = combineByteToWord(regB, regC) - 1;
 		regB = getHighByte(tmp);
 		regC = getLowByte(tmp);
 	}
 
-	void GBCPU::INC_C()
+	void CPU::INC_C()
 	{
 		regC += 1;
 
@@ -157,7 +157,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_C()
+	void CPU::DEC_C()
 	{
 		regC -= 1;
 
@@ -176,13 +176,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_C_n()
+	void CPU::LD_C_n()
 	{
 		regC = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::RRCA()
+	void CPU::RRCA()
 	{
 		regA = (regA >> 1) | (regA << 7);
 
@@ -198,32 +198,32 @@ namespace GameBoy
 	}
 
 	// 0x10 ~ 0x1F
-	void GBCPU::STOP()
+	void CPU::STOP()
 	{
 		// TODO: handle stop
 	}
 
-	void GBCPU::LD_DE_nn()
+	void CPU::LD_DE_nn()
 	{
 		regD = memoryUnit->readByte(regPC);
 		regE = memoryUnit->readByte(regPC + 1);
 		regPC += 2;
 	}
 
-	void GBCPU::LD_mDE_A()
+	void CPU::LD_mDE_A()
 	{
 		address addr = combineByteToWord(regD, regE);
 		memoryUnit->writeWord(addr, regA);
 	}
 
-	void GBCPU::INC_DE()
+	void CPU::INC_DE()
 	{
 		word tmp = combineByteToWord(regD, regE) + 1;
 		regD = getHighByte(tmp);
 		regE = getLowByte(tmp);
 	}
 
-	void GBCPU::INC_D()
+	void CPU::INC_D()
 	{
 		regD += 1;
 		if (regD == 0) {
@@ -241,7 +241,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_D()
+	void CPU::DEC_D()
 	{
 		regD -= 1;
 		if (regD == 0) {
@@ -259,13 +259,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_D_n()
+	void CPU::LD_D_n()
 	{
 		regD = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::RLA()
+	void CPU::RLA()
 	{
 		byte carryFlag = getCarryFlag() ? 0x1 : 0x0;
 		if (regA > 0x7F) {
@@ -281,13 +281,13 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::JR_n()
+	void CPU::JR_n()
 	{
-		word offset = static_cast<word>(memoryUnit->readByte(regPC));
+		word offset = static_cast<int16_t>(memoryUnit->readByte(regPC));
 		regPC = regPC + offset;
 	}
 
-	void GBCPU::ADD_HL_DE()
+	void CPU::ADD_HL_DE()
 	{
 		word HL = combineByteToWord(regH, regL);
 		word DE = combineByteToWord(regD, regE);
@@ -311,19 +311,19 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::LD_A_mDE()
+	void CPU::LD_A_mDE()
 	{
 		regA = memoryUnit->readByte(combineByteToWord(regD, regE));
 	}
 
-	void GBCPU::DEC_DE()
+	void CPU::DEC_DE()
 	{
 		word DE = combineByteToWord(regD, regE) - 1;
 		regD = getHighByte(DE);
 		regE = getLowByte(DE);
 	}
 
-	void GBCPU::INC_E()
+	void CPU::INC_E()
 	{
 		regE += 1;
 
@@ -342,7 +342,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_E()
+	void CPU::DEC_E()
 	{
 		regE -= 1;
 		if (regE == 0) {
@@ -360,13 +360,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_E_n()
+	void CPU::LD_E_n()
 	{
 		regE = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::RRA()
+	void CPU::RRA()
 	{
 		byte carryFlag = getCarryFlag() ? 0x1 : 0x0;
 
@@ -383,23 +383,23 @@ namespace GameBoy
 	}
 
 	// 0x20 ~ 0x2F
-	void GBCPU::JR_NZ_n()
+	void CPU::JR_NZ_n()
 	{
 		if (!getZeroFlag()) {
-			regPC = regPC + memoryUnit->readByte(regPC);
+			regPC = regPC + static_cast<int16_t>(memoryUnit->readByte(regPC));
 		} else {
 			regPC += 1;
 		}
 	}
 
-	void GBCPU::LD_HL_nn()
+	void CPU::LD_HL_nn()
 	{
 		regH = memoryUnit->readByte(regPC + 1);
 		regL = memoryUnit->readByte(regPC);
 		regPC += 2;
 	}
 
-	void GBCPU::LDI_mHL_A()
+	void CPU::LDI_mHL_A()
 	{
 		memoryUnit->writeWord(combineByteToWord(regH, regL), regA);
 		word HL = combineByteToWord(regH, regL) + 1;
@@ -407,14 +407,14 @@ namespace GameBoy
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::INC_HL()
+	void CPU::INC_HL()
 	{
 		word HL = combineByteToWord(regH, regL) + 1;
 		regH = getHighByte(HL);
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::INC_H()
+	void CPU::INC_H()
 	{
 		regH += 1;
 		
@@ -433,7 +433,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 	
-	void GBCPU::DEC_H()
+	void CPU::DEC_H()
 	{
 		regH -= 1;
 		
@@ -452,27 +452,27 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_H_n()
+	void CPU::LD_H_n()
 	{
 		regH = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::DAA()
+	void CPU::DAA()
 	{
 		// TODO:
 	}
 
-	void GBCPU::JR_Z_n()
+	void CPU::JR_Z_n()
 	{
 		if (getZeroFlag()) {
-			regPC = regPC + memoryUnit->readByte(regPC);
+			regPC = regPC + static_cast<int16_t>(memoryUnit->readByte(regPC));
 		} else {
 			regPC += 1;
 		}
 	}
 
-	void GBCPU::ADD_HL_HL()
+	void CPU::ADD_HL_HL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		if ((HL & 0x0FFF) > 0x07FF) {
@@ -487,7 +487,7 @@ namespace GameBoy
 		regL = getLowByte(sum);
 	}
 
-	void GBCPU::LDI_A_mHL()
+	void CPU::LDI_A_mHL()
 	{
 		regA = memoryUnit->readByte(combineByteToWord(regH, regL));
 		word HL = combineByteToWord(regH, regL) + 1;
@@ -495,14 +495,14 @@ namespace GameBoy
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::DEC_HL()
+	void CPU::DEC_HL()
 	{
 		word HL = combineByteToWord(regH, regL) - 1;
 		regH = getHighByte(HL);
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::INC_L()
+	void CPU::INC_L()
 	{
 		regL += 1;
 		if (regL == 0) { 
@@ -520,7 +520,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_L()
+	void CPU::DEC_L()
 	{
 		regL -= 1;
 		if (regL == 0) {
@@ -538,13 +538,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_L_n()
+	void CPU::LD_L_n()
 	{
 		regL = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::CPL()
+	void CPU::CPL()
 	{
 		regA ^= 0xFF;
 		setSubtractFlag();
@@ -552,23 +552,23 @@ namespace GameBoy
 	}
 
 	// 0x30 ~ 0x3F
-	void GBCPU::JR_NC_n()
+	void CPU::JR_NC_n()
 	{
 		if (!getCarryFlag()) {
-			regPC = regPC + memoryUnit->readByte(regPC);
+			regPC = regPC + static_cast<int16_t>(memoryUnit->readByte(regPC));
 		} else {
 			regPC += 1;
 		}
 	}
 
-	void GBCPU::LD_SP_nn()
+	void CPU::LD_SP_nn()
 	{
 		byte high = memoryUnit->readByte(regPC + 1);
 		byte low = memoryUnit->readByte(regPC);
 		regSP = combineByteToWord(high, low);
 	}
 
-	void GBCPU::LDD_mHL_A()
+	void CPU::LDD_mHL_A()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regA);
@@ -577,12 +577,12 @@ namespace GameBoy
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::INC_SP()
+	void CPU::INC_SP()
 	{
 		regSP += 1;
 	}
 
-	void GBCPU::INC_mHL()
+	void CPU::INC_mHL()
 	{
 		word addr = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(addr) + 1;
@@ -604,7 +604,7 @@ namespace GameBoy
 		memoryUnit->writeByte(addr, tmp);
 	}
 
-	void GBCPU::DEC_mHL()
+	void CPU::DEC_mHL()
 	{
 		word addr = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(addr) - 1;
@@ -628,7 +628,7 @@ namespace GameBoy
 		memoryUnit->writeByte(addr, tmp);
 	}
 
-	void GBCPU::LD_mHL_n()
+	void CPU::LD_mHL_n()
 	{
 		byte val = memoryUnit->readByte(regPC);
 		word addr = combineByteToWord(regH, regL);
@@ -636,23 +636,23 @@ namespace GameBoy
 		regPC += 1;
 	}
 
-	void GBCPU::SCF()
+	void CPU::SCF()
 	{
 		setCarryFlag();
 		clearHalfCarryFlag();
 		clearSubtractFlag();
 	}
 
-	void GBCPU::JR_C_n()
+	void CPU::JR_C_n()
 	{
 		if (getCarryFlag()) {
-			regPC = regPC + memoryUnit->readByte(regPC);
+			regPC = regPC + static_cast<int16_t>(memoryUnit->readByte(regPC));
 		} else {
 			regPC += 1;
 		}
 	}
 
-	void GBCPU::ADD_HL_SP()
+	void CPU::ADD_HL_SP()
 	{
 		word HL = combineByteToWord(regH, regL);
 		word sum = HL + regSP;
@@ -675,7 +675,7 @@ namespace GameBoy
 		regL = getLowByte(sum);
 	}
 
-	void GBCPU::LDD_A_mHL()
+	void CPU::LDD_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regA = memoryUnit->readByte(HL);
@@ -684,12 +684,12 @@ namespace GameBoy
 		regL = getLowByte(HL);
 	}
 
-	void GBCPU::DEC_SP()
+	void CPU::DEC_SP()
 	{
 		regSP -= 1;
 	}
 
-	void GBCPU::INC_A()
+	void CPU::INC_A()
 	{
 		regA += 1;
 		if (regA == 0) {
@@ -707,7 +707,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::DEC_A()
+	void CPU::DEC_A()
 	{
 		regA -= 1;
 		if (regA == 0) {
@@ -727,13 +727,13 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::LD_A_n()
+	void CPU::LD_A_n()
 	{
 		regA = memoryUnit->readByte(regPC);
 		regPC += 1;
 	}
 
-	void GBCPU::CCF()
+	void CPU::CCF()
 	{
 		if (getCarryFlag) {
 			clearCarryFlag();
@@ -746,344 +746,344 @@ namespace GameBoy
 	}
 
 	// 0x40 ~ 0x4F
-	void GBCPU::LD_B_B()
+	void CPU::LD_B_B()
 	{
 		// Nothing to be done
 	}
 
-	void GBCPU::LD_B_C()
+	void CPU::LD_B_C()
 	{
 		regB = regC;
 	}
 
-	void GBCPU::LD_B_D()
+	void CPU::LD_B_D()
 	{
 		regB = regD;
 	}
 
-	void GBCPU::LD_B_E()
+	void CPU::LD_B_E()
 	{
 		regB = regE;
 	}
 
-	void GBCPU::LD_B_H()
+	void CPU::LD_B_H()
 	{
 		regB = regH;
 	}
 
-	void GBCPU::LD_B_L()
+	void CPU::LD_B_L()
 	{
 		regB = regL;
 	}
 
-	void GBCPU::LD_B_mHL()
+	void CPU::LD_B_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regB = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_B_A()
+	void CPU::LD_B_A()
 	{
 		regB = regA;
 	}
 
-	void GBCPU::LD_C_B()
+	void CPU::LD_C_B()
 	{
 		regC = regB;
 	}
 
-	void GBCPU::LD_C_C()
+	void CPU::LD_C_C()
 	{
 		// Nothing to be done
 	}
 
-	void GBCPU::LD_C_D()
+	void CPU::LD_C_D()
 	{
 		regC = regD;
 	}
 
-	void GBCPU::LD_C_E()
+	void CPU::LD_C_E()
 	{
 		regC = regE;
 	}
 
-	void GBCPU::LD_C_H()
+	void CPU::LD_C_H()
 	{
 		regC = regH;
 	}
 
-	void GBCPU::LD_C_L()
+	void CPU::LD_C_L()
 	{
 		regC = regL;
 	}
 
-	void GBCPU::LD_C_mHL()
+	void CPU::LD_C_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regC = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_C_A()
+	void CPU::LD_C_A()
 	{
 		regC = regA;
 	}
 
 	// 0x50 ~ 0x5F
-	void GBCPU::LD_D_B()
+	void CPU::LD_D_B()
 	{
 		regD = regB;
 	}
 
-	void GBCPU::LD_D_C()
+	void CPU::LD_D_C()
 	{
 		regD = regC;
 	}
 
-	void GBCPU::LD_D_D()
+	void CPU::LD_D_D()
 	{
 		// nothing to be done
 	}
 
-	void GBCPU::LD_D_E()
+	void CPU::LD_D_E()
 	{
 		regD = regE;
 	}
 
-	void GBCPU::LD_D_H()
+	void CPU::LD_D_H()
 	{
 		regD = regH;
 	}
 
-	void GBCPU::LD_D_L()
+	void CPU::LD_D_L()
 	{
 		regD = regL;
 	}
 
-	void GBCPU::LD_D_mHL()
+	void CPU::LD_D_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regD = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_D_A()
+	void CPU::LD_D_A()
 	{
 		regD = regA;
 	}
 
-	void GBCPU::LD_E_B()
+	void CPU::LD_E_B()
 	{
 		regE = regB;
 	}
 
-	void GBCPU::LD_E_C()
+	void CPU::LD_E_C()
 	{
 		regE = regC;
 	}
 
-	void GBCPU::LD_E_D()
+	void CPU::LD_E_D()
 	{
 		regE = regD;
 	}
 
-	void GBCPU::LD_E_E()
+	void CPU::LD_E_E()
 	{
 		// nothing to do
 	}
 
-	void GBCPU::LD_E_H()
+	void CPU::LD_E_H()
 	{
 		regE = regH;
 	}
 
-	void GBCPU::LD_E_L()
+	void CPU::LD_E_L()
 	{
 		regE = regL;
 	}
 
-	void GBCPU::LD_E_mHL()
+	void CPU::LD_E_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regE = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_E_A()
+	void CPU::LD_E_A()
 	{
 		regE = regA;
 	}
 
 	// 0x60 ~ 0x6F
-	void GBCPU::LD_H_B()
+	void CPU::LD_H_B()
 	{
 		regH = regB;
 	}
 
-	void GBCPU::LD_H_C()
+	void CPU::LD_H_C()
 	{
 		regH = regC;
 	}
 
-	void GBCPU::LD_H_D()
+	void CPU::LD_H_D()
 	{
 		regH = regD;
 	}
 
-	void GBCPU::LD_H_E()
+	void CPU::LD_H_E()
 	{
 		regH = regE;
 	}
 
-	void GBCPU::LD_H_H()
+	void CPU::LD_H_H()
 	{
 		// nothing to do
 	}
 
-	void GBCPU::LD_H_L()
+	void CPU::LD_H_L()
 	{
 		regH = regL;
 	}
 
-	void GBCPU::LD_H_mHL()
+	void CPU::LD_H_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regH = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_H_A()
+	void CPU::LD_H_A()
 	{
 		regH = regA;
 	}
 
-	void GBCPU::LD_L_B()
+	void CPU::LD_L_B()
 	{
 		regL = regB;
 	}
 
-	void GBCPU::LD_L_C()
+	void CPU::LD_L_C()
 	{
 		regL = regC;
 	}
 
-	void GBCPU::LD_L_D()
+	void CPU::LD_L_D()
 	{
 		regL = regD;
 	}
 
-	void GBCPU::LD_L_E()
+	void CPU::LD_L_E()
 	{
 		regL = regE;
 	}
 
-	void GBCPU::LD_L_H()
+	void CPU::LD_L_H()
 	{
 		regL = regH;
 	}
 
-	void GBCPU::LD_L_L()
+	void CPU::LD_L_L()
 	{
 		// nothing to do
 	}
 
-	void GBCPU::LD_L_mHL()
+	void CPU::LD_L_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regL = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_L_A()
+	void CPU::LD_L_A()
 	{
 		regL = regA;
 	}
 
 	// 0x70 ~ 0x7F
-	void GBCPU::LD_mHL_B()
+	void CPU::LD_mHL_B()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regB);
 	}
 
-	void GBCPU::LD_mHL_C()
+	void CPU::LD_mHL_C()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regC);
 	}
 
-	void GBCPU::LD_mHL_D()
+	void CPU::LD_mHL_D()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regD);
 	}
-	void GBCPU::LD_mHL_E()
+	void CPU::LD_mHL_E()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regE);
 	}
 
-	void GBCPU::LD_mHL_H()
+	void CPU::LD_mHL_H()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regH);
 	}
 
-	void GBCPU::LD_mHL_L()
+	void CPU::LD_mHL_L()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regL);
 	}
 
-	void GBCPU::HALT()
+	void CPU::HALT()
 	{
 		// TODO: implement this later
 	}
 
-	void GBCPU::LD_mHL_A()
+	void CPU::LD_mHL_A()
 	{
 		word HL = combineByteToWord(regH, regL);
 		memoryUnit->writeByte(HL, regA);
 	}
 
-	void GBCPU::LD_A_B()
+	void CPU::LD_A_B()
 	{
 		regA = regB;
 	}
 
-	void GBCPU::LD_A_C()
+	void CPU::LD_A_C()
 	{
 		regA = regB;
 	}
 
-	void GBCPU::LD_A_D()
+	void CPU::LD_A_D()
 	{
 		regA = regD;
 	}
 
-	void GBCPU::LD_A_E()
+	void CPU::LD_A_E()
 	{
 		regA = regE;
 	}
 
-	void GBCPU::LD_A_H()
+	void CPU::LD_A_H()
 	{
 		regA = regH;
 	}
 
-	void GBCPU::LD_A_L()
+	void CPU::LD_A_L()
 	{
 		regA = regL;
 	}
 
-	void GBCPU::LD_A_mHL()
+	void CPU::LD_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		regA = memoryUnit->readByte(HL);
 	}
 
-	void GBCPU::LD_A_A()
+	void CPU::LD_A_A()
 	{
 		// nothing  to do
 	}
 
 	// 0x80 ~ 0x8F
-	void GBCPU::ADD_A_B()
+	void CPU::ADD_A_B()
 	{
 		byte sum = regA + regB;
 		
@@ -1095,7 +1095,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADD_A_C()
+	void CPU::ADD_A_C()
 	{
 		byte sum = regA + regC;
 
@@ -1107,7 +1107,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADD_A_D()
+	void CPU::ADD_A_D()
 	{
 		byte sum = regA + regD;
 
@@ -1119,7 +1119,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADD_A_E()
+	void CPU::ADD_A_E()
 	{
 		byte sum = regA + regE;
 
@@ -1131,7 +1131,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADD_A_H()
+	void CPU::ADD_A_H()
 	{
 		byte sum = regA + regH;
 
@@ -1142,7 +1142,7 @@ namespace GameBoy
 
 		regA = sum;
 	}
-	void GBCPU::ADD_A_L()
+	void CPU::ADD_A_L()
 	{
 		byte sum = regA + regL;
 
@@ -1154,7 +1154,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADD_A_mHL()
+	void CPU::ADD_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(HL);
@@ -1166,7 +1166,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::ADD_A_A()
+	void CPU::ADD_A_A()
 	{
 		byte sum = regA << 1;
 
@@ -1178,7 +1178,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_B()
+	void CPU::ADC_A_B()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regB + carry;
@@ -1191,7 +1191,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_C()
+	void CPU::ADC_A_C()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regC + carry;
@@ -1204,7 +1204,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_D()
+	void CPU::ADC_A_D()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regD + carry;
@@ -1217,7 +1217,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_E()
+	void CPU::ADC_A_E()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regE + carry;
@@ -1230,7 +1230,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_H()
+	void CPU::ADC_A_H()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regH + carry;
@@ -1243,7 +1243,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_L()
+	void CPU::ADC_A_L()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = regA + regL + carry;
@@ -1256,7 +1256,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_mHL()
+	void CPU::ADC_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(HL);
@@ -1272,7 +1272,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::ADC_A_A()
+	void CPU::ADC_A_A()
 	{
 		byte carry = (getCarryFlag() ? 1 : 0);
 		byte sum = (regA << 1) | carry;
@@ -1286,7 +1286,7 @@ namespace GameBoy
 	}
 
 	// 0x90 ~ 0x9F
-	void GBCPU::SUB_A_B()
+	void CPU::SUB_A_B()
 	{
 		byte diff = regA - regB;
 
@@ -1298,7 +1298,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_C()
+	void CPU::SUB_A_C()
 	{
 		byte diff = regA - regC;
 
@@ -1310,7 +1310,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_D()
+	void CPU::SUB_A_D()
 	{
 		byte diff = regA - regD;
 
@@ -1322,7 +1322,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_E()
+	void CPU::SUB_A_E()
 	{
 		byte diff = regA - regE;
 
@@ -1334,7 +1334,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_H()
+	void CPU::SUB_A_H()
 	{
 		byte diff = regA - regH;
 
@@ -1346,7 +1346,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_L()
+	void CPU::SUB_A_L()
 	{
 		byte diff = regA - regL;
 
@@ -1358,7 +1358,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_mHL()
+	void CPU::SUB_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(HL);
@@ -1373,7 +1373,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SUB_A_A()
+	void CPU::SUB_A_A()
 	{
 		// regA - regA must be 0
 		regA = 0;
@@ -1383,7 +1383,7 @@ namespace GameBoy
 		setSubtractFlag();
 	}
 
-	void GBCPU::SBC_A_B()
+	void CPU::SBC_A_B()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regB - carry;
@@ -1396,7 +1396,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_C()
+	void CPU::SBC_A_C()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regC - carry;
@@ -1409,7 +1409,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_D()
+	void CPU::SBC_A_D()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regD - carry;
@@ -1422,7 +1422,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_E()
+	void CPU::SBC_A_E()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regE - carry;
@@ -1435,7 +1435,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_H()
+	void CPU::SBC_A_H()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regH - carry;
@@ -1448,7 +1448,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_L()
+	void CPU::SBC_A_L()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte diff = regA - regL - carry;
@@ -1461,7 +1461,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_mHL()
+	void CPU::SBC_A_mHL()
 	{
 		word HL = combineByteToWord(regH, regL);
 		byte tmp = memoryUnit->readByte(HL);
@@ -1477,7 +1477,7 @@ namespace GameBoy
 		regA = diff;
 	}
 
-	void GBCPU::SBC_A_A()
+	void CPU::SBC_A_A()
 	{
 		if (getCarryFlag()) {
 			clearZeroFlag();
@@ -1495,7 +1495,7 @@ namespace GameBoy
 	}
 
 	// 0xA0 ~ 0xAF
-	void GBCPU::AND_B()
+	void CPU::AND_B()
 	{
 		regA &= regB;
 		changeZeroFlag(regA == 0);
@@ -1504,7 +1504,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_C()
+	void CPU::AND_C()
 	{
 		regA &= regC;
 		changeZeroFlag(regA == 0);
@@ -1513,7 +1513,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_D()
+	void CPU::AND_D()
 	{
 		regA &= regD;
 		changeZeroFlag(regA == 0);
@@ -1522,7 +1522,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_E()
+	void CPU::AND_E()
 	{
 		regA &= regE;
 		changeZeroFlag(regA == 0);
@@ -1531,7 +1531,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_H()
+	void CPU::AND_H()
 	{
 		regA &= regH;
 		changeZeroFlag(regA == 0);
@@ -1540,7 +1540,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_L()
+	void CPU::AND_L()
 	{
 		regA &= regL;
 		changeZeroFlag(regA == 0);
@@ -1549,7 +1549,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_mHL()
+	void CPU::AND_mHL()
 	{
 		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
 		regA &= tmp;
@@ -1559,7 +1559,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::AND_A()
+	void CPU::AND_A()
 	{
 		// regA & regA always equal regA, so regA remains same.
 		changeZeroFlag(regA == 0);
@@ -1568,7 +1568,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_B()
+	void CPU::XOR_B()
 	{
 		regA ^= regB;
 		changeZeroFlag(regA == 0);
@@ -1577,7 +1577,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_C()
+	void CPU::XOR_C()
 	{
 		regA ^= regC;
 		changeZeroFlag(regA == 0);
@@ -1586,7 +1586,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_D()
+	void CPU::XOR_D()
 	{
 		regA ^= regD;
 		changeZeroFlag(regA == 0);
@@ -1595,7 +1595,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_E()
+	void CPU::XOR_E()
 	{
 		regA ^= regE;
 		changeZeroFlag(regA == 0);
@@ -1604,7 +1604,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_H()
+	void CPU::XOR_H()
 	{
 		regA ^= regH;
 		changeZeroFlag(regA == 0);
@@ -1613,7 +1613,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_L()
+	void CPU::XOR_L()
 	{
 		regA ^= regL;
 		changeZeroFlag(regA == 0);
@@ -1622,7 +1622,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_mHL()
+	void CPU::XOR_mHL()
 	{
 		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
 		regA ^= tmp;
@@ -1632,7 +1632,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::XOR_A()
+	void CPU::XOR_A()
 	{
 		// a XOR a always be 0, so set regA to zero.
 		regA = 0;
@@ -1643,7 +1643,7 @@ namespace GameBoy
 	}
 
 	// 0xB0 ~ 0xBF
-	void GBCPU::OR_B()
+	void CPU::OR_B()
 	{
 		regA |= regB;
 		changeZeroFlag(regA == 0);
@@ -1652,7 +1652,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_C()
+	void CPU::OR_C()
 	{
 		regA |= regC;
 		changeZeroFlag(regA == 0);
@@ -1661,7 +1661,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_D()
+	void CPU::OR_D()
 	{
 		regA |= regD;
 		changeZeroFlag(regA == 0);
@@ -1670,7 +1670,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_E()
+	void CPU::OR_E()
 	{
 		regA |= regE;
 		changeZeroFlag(regA == 0);
@@ -1679,7 +1679,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_H()
+	void CPU::OR_H()
 	{
 		regA |= regH;
 		changeZeroFlag(regA == 0);
@@ -1688,7 +1688,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_L()
+	void CPU::OR_L()
 	{
 		regA |= regL;
 		changeZeroFlag(regA == 0);
@@ -1697,7 +1697,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_mHL()
+	void CPU::OR_mHL()
 	{
 		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
 		regA |= tmp;
@@ -1707,7 +1707,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::OR_A()
+	void CPU::OR_A()
 	{
 		// a | a == a
 		changeZeroFlag(regA == 0);
@@ -1716,7 +1716,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::CP_B()
+	void CPU::CP_B()
 	{
 		byte sum = regA - regB;
 		changeHalfCarryFlag((sum &0x0F) > (regA & 0x0F));
@@ -1725,7 +1725,7 @@ namespace GameBoy
 		changeCarryFlag(regB > regA);
 	}
 
-	void GBCPU::CP_C()
+	void CPU::CP_C()
 	{
 		byte sum = regA - regC;
 		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
@@ -1734,7 +1734,7 @@ namespace GameBoy
 		changeCarryFlag(regC > regA);
 	}
 
-	void GBCPU::CP_D()
+	void CPU::CP_D()
 	{
 		byte sum = regA - regD;
 		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
@@ -1743,7 +1743,7 @@ namespace GameBoy
 		changeCarryFlag(regD > regA);
 	}
 
-	void GBCPU::CP_E()
+	void CPU::CP_E()
 	{
 		byte sum = regA - regE;
 		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
@@ -1752,7 +1752,7 @@ namespace GameBoy
 		changeCarryFlag(regE > regA);
 	}
 
-	void GBCPU::CP_H()
+	void CPU::CP_H()
 	{
 		byte sum = regA - regH;
 		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
@@ -1761,7 +1761,7 @@ namespace GameBoy
 		changeCarryFlag(regH > regA);
 	}
 
-	void GBCPU::CP_L()
+	void CPU::CP_L()
 	{
 		byte sum = regA - regL;
 		changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
@@ -1770,7 +1770,7 @@ namespace GameBoy
 		changeCarryFlag(regL > regA);
 	}
 
-	void GBCPU::CP_mHL()
+	void CPU::CP_mHL()
 	{
 		byte tmp = memoryUnit->readByte(combineByteToWord(regH, regL));
 		byte sum = regA - tmp;
@@ -1780,7 +1780,7 @@ namespace GameBoy
 		changeCarryFlag(tmp > regA);
 	}
 
-	void GBCPU::CP_A()
+	void CPU::CP_A()
 	{
 		// a == a
 		clearHalfCarryFlag();
@@ -1790,7 +1790,7 @@ namespace GameBoy
 	}
 
 	// 0xC0 ~ 0xCF
-	void GBCPU::RET_nFZ()
+	void CPU::RET_nFZ()
 	{
 		if (!getZeroFlag()) {
 			regPC = memoryUnit->readWord(regSP);
@@ -1798,14 +1798,14 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::POP_BC()
+	void CPU::POP_BC()
 	{
 		regC = memoryUnit->readByte(regSP);
 		regB = memoryUnit->readByte(regSP + 1);
 		regSP += 2;
 	}
 
-	void GBCPU::JP_nFZ_nn()
+	void CPU::JP_nFZ_nn()
 	{
 		if (!getZeroFlag()) {
 			regPC = memoryUnit->readWord(regPC);
@@ -1814,12 +1814,12 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::JP_nn()
+	void CPU::JP_nn()
 	{
 		regPC = memoryUnit->readWord(regPC);
 	}
 
-	void GBCPU::CALL_nFZ_nn()
+	void CPU::CALL_nFZ_nn()
 	{
 		if (!getZeroFlag()) {
 			word targetPC = memoryUnit->readWord(regPC);
@@ -1832,13 +1832,13 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::PUSH_BC()
+	void CPU::PUSH_BC()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, combineByteToWord(regB, regC));
 	}
 
-	void GBCPU::ADD_n()
+	void CPU::ADD_n()
 	{
 		byte tmp = memoryUnit->readByte(regPC);
 		byte sum = regA + tmp;
@@ -1852,14 +1852,14 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::RST_0()
+	void CPU::RST_0()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
 		regPC = 0;
 	}
 
-	void GBCPU::RET_FZ()
+	void CPU::RET_FZ()
 	{
 		if (getZeroFlag()) {
 			regPC = memoryUnit->readWord(regSP);
@@ -1867,13 +1867,13 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::RET()
+	void CPU::RET()
 	{
 		regPC = memoryUnit->readWord(regSP);
 		regSP += 2;
 	}
 
-	void GBCPU::JP_FZ_nn()
+	void CPU::JP_FZ_nn()
 	{
 		if (getZeroFlag()) {
 			regPC = memoryUnit->readWord(regPC);
@@ -1882,12 +1882,12 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::CB_op_code()
+	void CPU::CB_op_code()
 	{
 		// TODO: run CB op codes
 	}
 
-	void GBCPU::CALL_FZ_nn()
+	void CPU::CALL_FZ_nn()
 	{
 		if (getZeroFlag()) {
 			word targetPC = memoryUnit->readWord(regPC);
@@ -1900,7 +1900,7 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::CALL_nn()
+	void CPU::CALL_nn()
 	{
 		word targetPC = memoryUnit->readWord(regPC);
 		regPC += 2;
@@ -1909,7 +1909,7 @@ namespace GameBoy
 		regPC = targetPC;
 	}
 
-	void GBCPU::ADC_A_n()
+	void CPU::ADC_A_n()
 	{
 		byte carry = getCarryFlag() ? 1 : 0;
 		byte tmp = memoryUnit->readByte(regPC);
@@ -1925,7 +1925,7 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::RST_8()
+	void CPU::RST_8()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
@@ -1933,7 +1933,7 @@ namespace GameBoy
 	}
 
 	// 0xD0 ~ 0xDF
-	void GBCPU::RET_nFC()
+	void CPU::RET_nFC()
 	{
 		if (!getZeroFlag()) {
 			regPC = memoryUnit->readWord(regSP);
@@ -1941,14 +1941,14 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::POP_DE()
+	void CPU::POP_DE()
 	{
 		regD = memoryUnit->readByte(regSP + 1);
 		regE = memoryUnit->readByte(regSP);
 		regSP += 2;
 	}
 
-	void GBCPU::JP_nFC_nn()
+	void CPU::JP_nFC_nn()
 	{
 		if (!getZeroFlag()) {
 			regPC = memoryUnit->readWord(regSP);
@@ -1957,12 +1957,12 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::Illegal_op_code_D3()	// !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_D3()	// !!! Illegal op code, should not be encountered
 	{
 		// TODO: 
 	}
 
-	void GBCPU::CALL_nFC_nn()
+	void CPU::CALL_nFC_nn()
 	{
 		if (!getCarryFlag()) {
 			word targetPC = memoryUnit->readWord(regPC);
@@ -1974,13 +1974,13 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::PUSH_DE()
+	void CPU::PUSH_DE()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, combineByteToWord(regD, regE));
 	}
 
-	void GBCPU::SUB_A_n()
+	void CPU::SUB_A_n()
 	{
 		byte tmp = memoryUnit->readByte(regPC);
 		byte sum = regA - tmp;
@@ -1992,14 +1992,14 @@ namespace GameBoy
 		clearSubtractFlag();
 	}
 
-	void GBCPU::RST_10()
+	void CPU::RST_10()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
 		regPC = 0x10;
 	}
 
-	void GBCPU::RET_FC()
+	void CPU::RET_FC()
 	{
 		if (getCarryFlag()) {
 			regPC = memoryUnit->readWord(regSP);
@@ -2007,14 +2007,14 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::RETI()
+	void CPU::RETI()
 	{
 		regPC = memoryUnit->readWord(regSP);
 		regSP += 2;
 		// TODO: modify the IRQ
 	}
 
-	void GBCPU::JP_FC_nn()
+	void CPU::JP_FC_nn()
 	{
 		if (getCarryFlag()) {
 			regPC = memoryUnit->readWord(regPC);
@@ -2024,12 +2024,12 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::Illegal_op_code_DB() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_DB() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and halt
 	}
 
-	void GBCPU::CALL_FC_nn()
+	void CPU::CALL_FC_nn()
 	{
 		if (getCarryFlag()) {
 			word targetPC = memoryUnit->readWord(regPC);
@@ -2042,12 +2042,12 @@ namespace GameBoy
 		}
 	}
 
-	void GBCPU::Illegal_op_code_DD() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_DD() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and halt
 	}
 
-	void GBCPU::SBC_A_n()
+	void CPU::SBC_A_n()
 	{
 		byte tmp = memoryUnit->readByte(regPC);
 		byte carry = getCarryFlag() ? 1 : 0;
@@ -2060,7 +2060,7 @@ namespace GameBoy
 		regA = sum;
 	}
 
-	void GBCPU::RST_18()
+	void CPU::RST_18()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
@@ -2068,41 +2068,41 @@ namespace GameBoy
 	}
 
 	// 0xE0 ~ 0xEF
-	void GBCPU::LDH_mn_A()
+	void CPU::LDH_mn_A()
 	{
 		word addr = 0xFF00 + static_cast<word>(memoryUnit->readByte(regPC));
 		memoryUnit->writeByte(addr, regA);
 		regPC += 1;
 	}
 
-	void GBCPU::POP_HL()
+	void CPU::POP_HL()
 	{
 		regH = memoryUnit->readByte(regSP + 1);
 		regL = memoryUnit->readByte(regSP);
 		regSP += 2;
 	}
 
-	void GBCPU::LD_mC_A()
+	void CPU::LD_mC_A()
 	{
 		word addr = 0xFF00 + static_cast<word>(regC);
 		memoryUnit->writeByte(addr, regA);
 	}
-	void GBCPU::Illegal_op_code_E3() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_E3() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and halt
 	}
-	void GBCPU::Illegal_op_code_E4() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_E4() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and halt
 	}
 
-	void GBCPU::PUSH_HL()
+	void CPU::PUSH_HL()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, combineByteToWord(regH, regL));
 	}
 
-	void GBCPU::AND_n()
+	void CPU::AND_n()
 	{
 		byte tmp = memoryUnit->readByte(regPC);
 		regA &= tmp;
@@ -2113,14 +2113,14 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::RST_20()
+	void CPU::RST_20()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
 		regPC = 0x20;
 	}
 
-	void GBCPU::ADD_SP_n()
+	void CPU::ADD_SP_n()
 	{
 		byte tmp = memoryUnit->readByte(regPC);
 		word signedTmp = static_cast<word>(static_cast<int16_t>(tmp));
@@ -2137,31 +2137,31 @@ namespace GameBoy
 
 	}
 
-	void GBCPU::JP_mHL()
+	void CPU::JP_mHL()
 	{
 		regPC = combineByteToWord(regH, regL);
 	}
-	void GBCPU::LD_mnn_A()
+	void CPU::LD_mnn_A()
 	{
 		word addr = memoryUnit->readWord(regPC);
 		memoryUnit->writeByte(addr, regA);
 		regPC += 2;
 	}
-	void GBCPU::Illegal_op_code_EB() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_EB() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and pause
 	}
 
-	void GBCPU::Illegal_op_code_EC() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_EC() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and pause
 	}
-	void GBCPU::Illegal_op_code_ED() // !!! Illegal op code, should not be encountered
+	void CPU::Illegal_op_code_ED() // !!! Illegal op code, should not be encountered
 	{
 		// TODO: alert and pause
 	}
 
-	void GBCPU::XOR_n()
+	void CPU::XOR_n()
 	{
 		regA ^= memoryUnit->readByte(regPC);
 		regPC += 1;
@@ -2171,7 +2171,7 @@ namespace GameBoy
 		clearCarryFlag();
 	}
 
-	void GBCPU::RST_28()
+	void CPU::RST_28()
 	{
 		regSP -= 2;
 		memoryUnit->writeWord(regSP, regPC);
@@ -2179,20 +2179,124 @@ namespace GameBoy
 	}
 
 	// 0xF0 ~ 0xFF
-	void GBCPU::LDH_A_mn();	
-	void GBCPU::POP_AF();	
-	void GBCPU::LD_A_mC();	
-	void GBCPU::DI();		
-	void GBCPU::Illegal_op_code_F4(); // !!! Illegal op code, should not be encountered
-	void GBCPU::PUSH_AF();	
-	void GBCPU::OR_n();		
-	void GBCPU::RST_30();	
-	void GBCPU::LDHL_SP_n();
-	void GBCPU::LD_SP_HL();	
-	void GBCPU::LD_A_mnn();	
-	void GBCPU::EI();		
-	void GBCPU::Illegal_op_code_FC(); // !!! Illegal op code, should not be encountered
-	void GBCPU::Illegal_op_code_FD(); // !!! Illegal op code, should not be encountered
-	void GBCPU::CP_n();		
-	void GBCPU::RST_38();	
+	void CPU::LDH_A_mn()
+	{
+		regA = memoryUnit->readByte(0xFF00u + regPC);
+        regPC += 1;
+	}
+
+	void CPU::POP_AF()
+    {
+        byte regFValue = memoryUnit->readByte(regSP);
+        changeZeroFlag(regFValue & ZeroFlagMask);
+        changeSubtractFlag(regFValue & SubtractFlagMask);
+        changeHalfCarryFlag(regFValue & HalfCarryFlagMask);
+        changeCarryFlag(regFValue & CarryFlagMask);
+
+        regA = memoryUnit->readByte(regSP + 1);
+        regSP += 2;
+    }
+
+	void CPU::LD_A_mC()
+    {
+        regA = memoryUnit->readByte(0xFF00u + regC);
+    }
+
+	void CPU::DI()
+    {
+        // TODO:
+    }
+
+	void CPU::Illegal_op_code_F4() // !!! Illegal op code, should not be encountered
+    {
+        // TODO: alert user
+    }
+
+	void CPU::PUSH_AF()
+    {
+        regSP -= 1;
+        memoryUnit->writeByte(regSP, regA);
+        regSP -= 1;
+        memoryUnit->writeByte(regSP, regFlag);
+    }
+
+	void CPU::OR_n()
+    {
+        byte tmp = memoryUnit->readByte(regPC);
+        regA = regA | tmp;
+        changeCarryFlag(regA == 0);
+        regPC += 1;
+
+        clearSubtractFlag();
+        clearCarryFlag();
+        clearHalfCarryFlag();
+    }
+
+	void CPU::RST_30()
+    {
+        regSP -= 2;
+        memoryUnit->writeWord(regSP, regPC);
+        regPC = 0x30;
+    }
+
+	void CPU::LDHL_SP_n()
+    {
+        word tmp = static_cast<int16_t>(memoryUnit->readByte(regPC));
+        regPC += 1;
+        word HL = regSP + tmp;
+        regH = getHighByte(HL);
+        regL = getLowByte(HL);
+
+        tmp = regSP ^ tmp ^ HL;
+        changeCarryFlag((tmp & 0x100) == 0x100);
+        changeHalfCarryFlag((tmp & 0x10) == 0x10);
+
+        clearZeroFlag();
+        clearSubtractFlag();
+    }
+
+	void CPU::LD_SP_HL()
+    {
+        regSP = combineByteToWord(regH, regL);
+    }
+
+	void CPU::LD_A_mnn()
+    {
+        word addr = combineByteToWord(memoryUnit->readByte(regPC + 1), memoryUnit->readByte(regPC));
+        regA = memoryUnit->readByte(addr);
+        regPC += 2;
+    }
+
+	void CPU::EI()
+    {
+        // TODO:
+    }
+
+	void CPU::Illegal_op_code_FC() // !!! Illegal op code, should not be encountered
+    {
+        // TODO: alert
+    }
+	void CPU::Illegal_op_code_FD() // !!! Illegal op code, should not be encountered
+    {
+        // TODO: alert
+    }
+
+	void CPU::CP_n()
+    {
+        byte tmp = memoryUnit->readByte(regPC);
+        regPC += 1;
+
+        byte sum = regA - tmp;
+        changeHalfCarryFlag((sum & 0x0F) > (regA & 0x0F));
+        changeCarryFlag(regA < tmp);
+        setSubtractFlag();
+    }
+
+	void CPU::RST_38()
+    {
+        regSP -= 2;
+        memoryUnit->writeWord(regSP, regPC);
+        regPC = 0x38;
+    }
+
 }

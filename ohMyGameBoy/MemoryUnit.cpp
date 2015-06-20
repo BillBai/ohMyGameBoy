@@ -1,36 +1,36 @@
-#include "GBMemoryUnit.h"
+#include "MemoryUnit.h"
 
 namespace GameBoy {
-	GBMemoryUnit::GBMemoryUnit()
+	MemoryUnit::MemoryUnit()
 	{
 	}
 
 	// Memory interface
 	// TODO: check address range
-	void GBMemoryUnit::writeByte(address addr, byte val)
+	void MemoryUnit::writeByte(address addr, byte val)
 	{
 		memory[addr] = val;
 	}
 
-	byte GBMemoryUnit::readByte(address addr)
+	byte MemoryUnit::readByte(address addr)
 	{
 		return memory[addr];
 	}
 
-	void GBMemoryUnit::writeWord(address addr, word val)
+	void MemoryUnit::writeWord(address addr, word val)
 	{
 		memory[addr + 1] = getHighByte(val);
 		memory[addr] = getLowByte(val);
 	}
 
-	word GBMemoryUnit::readWord(address addr)
+	word MemoryUnit::readWord(address addr)
 	{
 		byte h = memory[addr + 1];
 		byte l = memory[addr];
 		return combineByteToWord(h, l);
 	}
 
-	GBMemoryUnit::~GBMemoryUnit()
+	MemoryUnit::~MemoryUnit()
 	{
 	}
 }

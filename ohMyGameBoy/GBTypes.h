@@ -11,12 +11,12 @@ namespace GameBoy {
 
 	inline byte getHighByte(word w)
 	{
-		return static_cast<byte>((w >> 8) & 0x00FF);
+		return static_cast<byte>((w >> 8) & 0x00FFu);
 	}
 
 	inline byte getLowByte(word w)
 	{
-		return static_cast<byte>(w & 0x00FF);
+		return static_cast<byte>(w & 0x00FFu);
 	}
 
 	inline word combineByteToWord(byte h, byte l)

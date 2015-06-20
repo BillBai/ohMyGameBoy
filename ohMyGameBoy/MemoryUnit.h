@@ -1,16 +1,18 @@
 #pragma once
 
 #include <cstdint>
+#include <stddef.h>
 
 #include "GBTypes.h"
 
 namespace GameBoy {
-	class GBMemoryUnit
+	class MemoryUnit
 	{
 	public:
-		static const size_t GBMemroyCapacity = 0xffff;
+		static const size_t GBMemoryCapacity = 0xffff;
 
-		GBMemoryUnit();
+
+		MemoryUnit();
 
 		// Memory interface
 		void writeByte(address addr, byte val);
@@ -19,9 +21,9 @@ namespace GameBoy {
 		void writeWord(address addr, word val);
 		word readWord(address addr);
 
-		~GBMemoryUnit();
+		~MemoryUnit();
 	private:
-		uint8_t memory[GBMemroyCapacity];
+		uint8_t memory[GBMemoryCapacity];
 	};
 }
 

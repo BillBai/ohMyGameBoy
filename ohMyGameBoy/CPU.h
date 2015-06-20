@@ -1,16 +1,16 @@
 #pragma once
 
 #include "GBTypes.h"
-#include "GBMemoryUnit.h"
+#include "MemoryUnit.h"
 
 namespace GameBoy
 {
-	class GBCPU
+	class CPU
 	{
 	public:
-		GBCPU();
+		CPU();
 
-		// register accessors
+		// register accessor
 		byte getA() const { return regA; }
 		byte getB() const { return regB; }
 		byte getC() const { return regC; }
@@ -21,7 +21,7 @@ namespace GameBoy
 		word getSP() const { return regSP; }
 		word getPC() const { return regPC; }
 
-		// flag register accessors
+		// flag register accessor
 		// Z | N | H | C | 0 | 0 | 0 | 0
 		word getFlag()			const { return regFlag; }
 		bool getZeroFlag()		const { return (regFlag & 0x80) != 0; }
@@ -29,7 +29,7 @@ namespace GameBoy
 		bool getHalfCarryFlag() const { return (regFlag & 0x20) != 0; }
 		bool getCarryFlag()		const { return (regFlag & 0x10) != 0; }
 
-		~GBCPU();
+		~CPU();
 
 	private:
 		// general purpose registers
@@ -41,28 +41,33 @@ namespace GameBoy
 		// flag register
 		byte regFlag;
 
+		static const byte ZeroFlagMask = 0x80u;
+		static const byte SubtractFlagMask = 0x40u;
+		static const byte HalfCarryFlagMask = 0x20u;
+		static const byte CarryFlagMask = 0x10u;
+
 		// flag helpers
-		void setZeroFlag()				{ regFlag = regFlag | 0x80; }
-		void clearZeroFlag()			{ regFlag = regFlag & 0x7F; }
-		void changeZeroFlag(bool b)		{ regFlag = b ? (regFlag | 0x80) : (regFlag & 0x7F); }
+		void setZeroFlag()				{ regFlag = regFlag | ZeroFlagMask; }
+		void clearZeroFlag()			{ regFlag = regFlag & (~ZeroFlagMask); }
+		void changeZeroFlag(bool b)		{ regFlag = b ? (regFlag | ZeroFlagMask) : (regFlag & (~ZeroFlagMask)); }
 
-		void setSubtractFlag()				{ regFlag = regFlag | 0x40; }
-		void clearSubtractFlag()			{ regFlag = regFlag & 0xBF; }
-		void changeSubtractFlag(bool b)		{ regFlag = b ? (regFlag | 0x40) : (regFlag & 0xBF); }
+		void setSubtractFlag()				{ regFlag = regFlag | SubtractFlagMask; }
+		void clearSubtractFlag()			{ regFlag = regFlag & (~SubtractFlagMask); }
+		void changeSubtractFlag(bool b)		{ regFlag = b ? (regFlag | SubtractFlagMask) : (regFlag & (~SubtractFlagMask)); }
 
-		void setHalfCarryFlag()				{ regFlag = regFlag | 0x20; }
-		void clearHalfCarryFlag()			{ regFlag = regFlag & 0xDF; }
-		void changeHalfCarryFlag(bool b)	{ regFlag = b ? (regFlag | 0x20) : (regFlag & 0xDF); }
+		void setHalfCarryFlag()				{ regFlag = regFlag | HalfCarryFlagMask; }
+		void clearHalfCarryFlag()			{ regFlag = regFlag & (~HalfCarryFlagMask); }
+		void changeHalfCarryFlag(bool b)	{ regFlag = b ? (regFlag | HalfCarryFlagMask) : (regFlag & (~HalfCarryFlagMask)); }
 
-		void setCarryFlag()					{ regFlag = regFlag | 0x10; }
-		void clearCarryFlag()				{ regFlag = regFlag & 0xEF; }
-		void changeCarryFlag(bool b)		{ regFlag = b ? (regFlag | 0x10) : (regFlag & 0xEF); }
+		void setCarryFlag()					{ regFlag = regFlag | CarryFlagMask; }
+		void clearCarryFlag()				{ regFlag = regFlag & (~CarryFlagMask); }
+		void changeCarryFlag(bool b)		{ regFlag = b ? (regFlag | CarryFlagMask) : (regFlag & (~CarryFlagMask)); }
 
 
 		// Memory
-		GBMemoryUnit *memoryUnit;
+		MemoryUnit *memoryUnit;
 
-		// GBCPU instructions
+		// CPU instructions
 		// see http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html for details
 		// 0x00 ~ 0x0F
 		void NOP();			// 0x00 NOP

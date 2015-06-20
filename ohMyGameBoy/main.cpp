@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include "GBCPU.h"
+#include "CPU.h"
 #include "GBTypes.h"
 
 int main(int argc, char **argv)
 {
 	std::cout << "Hello world!" << std::endl;
-	GameBoy::GBCPU cpu = GameBoy::GBCPU();
+	GameBoy::CPU cpu = GameBoy::CPU();
 
 	using GameBoy::byte;
 	using GameBoy::word;
