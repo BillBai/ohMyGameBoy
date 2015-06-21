@@ -2,13 +2,32 @@
 
 namespace GameBoy
 {
-	CPU::CPU()
+	CPU::CPU():
+        regPC(0x100),
+        regSP(0xFFFE),
+        regA(0x0),
+        regB(0x0),
+        regC(0x0),
+        regD(0x0),
+        regE(0x0),
+        regH(0x0),
+        regL(0x0),
+        regFlag(0x0),
+        machineCycleCount(0),
+        clockCycleCount(0),
+        IME(true)
 	{
+
 	}
 
 	CPU::~CPU()
 	{
 	}
+
+    void CPU::reset()
+    {
+        // TODO:
+    }
 
 	// nothing to do
 	void CPU::NOP()
@@ -735,7 +754,7 @@ namespace GameBoy
 
 	void CPU::CCF()
 	{
-		if (getCarryFlag) {
+		if (getCarryFlag()) {
 			clearCarryFlag();
 		} else {
 			setCarryFlag();
@@ -2122,19 +2141,18 @@ namespace GameBoy
 
 	void CPU::ADD_SP_n()
 	{
-		byte tmp = memoryUnit->readByte(regPC);
-		word signedTmp = static_cast<word>(static_cast<int16_t>(tmp));
-		word sum = regSP + signedTmp;
-		regPC += 1;
+		byte tmp = static_cast<int16_t>(memoryUnit->readByte(regPC));
+        regPC += 1;
 
-		// TODO: check if this is right
-		changeCarryFlag((sum < regSP) || (sum < signedTmp));
-		//changeHalfCarryFlag();
+        word sum = regSP + tmp;
+        tmp = regSP ^ sum ^ tmp;
+        regSP = sum;
+
+        changeCarryFlag((tmp & 0x100) == 0x100);
+        changeHalfCarryFlag((tmp & 0x10) == 0x10);
+
 		clearZeroFlag();
 		clearSubtractFlag();
-
-		regSP = sum;
-
 	}
 
 	void CPU::JP_mHL()
@@ -2205,6 +2223,7 @@ namespace GameBoy
 	void CPU::DI()
     {
         // TODO:
+        IME = false;
     }
 
 	void CPU::Illegal_op_code_F4() // !!! Illegal op code, should not be encountered
@@ -2270,6 +2289,7 @@ namespace GameBoy
 	void CPU::EI()
     {
         // TODO:
+        IME = true;
     }
 
 	void CPU::Illegal_op_code_FC() // !!! Illegal op code, should not be encountered
@@ -2299,4 +2319,172 @@ namespace GameBoy
         regPC = 0x38;
     }
 
+    // CB instructions
+    // 0x00 ~ 0x0F
+
+    void CPU::RLC_B()
+    {
+        byte msb = (regB & 0x80) ? 0x1 : 0x0;
+        regB = (regB << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regB == 0x0);
+    }
+
+    void CPU::RLC_C()
+    {
+        byte msb = (regC & 0x80) ? 0x1 : 0x0;
+        regC = (regC << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regC == 0x0);
+    }
+
+    void CPU::RLC_D()
+    {
+        byte msb = (regD & 0x80) ? 0x1 : 0x0;
+        regD = (regD << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regD == 0x0);
+    }
+
+    void CPU::RLC_E()
+    {
+        byte msb = (regE & 0x80) ? 0x1 : 0x0;
+        regE = (regE << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regE == 0x0);
+    }
+
+    void CPU::RLC_H()
+    {
+        byte msb = (regH & 0x80) ? 0x1 : 0x0;
+        regH = (regH << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regH == 0x0);
+    }
+
+    void CPU::RLC_L()
+    {
+        byte msb = (regL & 0x80) ? 0x1 : 0x0;
+        regL = (regL << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regL == 0x0);
+    }
+
+    void CPU::RLC_mHL()
+    {
+        word HL = combineByteToWord(regH, regL);
+        byte tmp = memoryUnit->readByte(HL);
+        byte msb = (tmp & 0x80) ? 0x1 : 0x0;
+        tmp = (tmp << 1) | msb;
+        memoryUnit->writeByte(HL, tmp);
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(tmp == 0x0);
+    }
+
+    void CPU::RLC_A()
+    {
+        byte msb = (regA & 0x80) ? 0x1 : 0x0;
+        regA = (regA << 1) | msb;
+        changeCarryFlag(msb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regA == 0x0);
+    }
+
+    void CPU::RRC_B()
+    {
+        byte lsb = (regB & 0x01) ? 0x80 : 0x00;
+        regB = lsb | (regB >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regB == 0x0);
+    }
+
+    void CPU::RRC_C()
+    {
+        byte lsb = (regC & 0x01) ? 0x80 : 0x00;
+        regC = lsb | (regC >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regC == 0x0);
+    }
+
+    void CPU::RRC_D()
+    {
+        byte lsb = (regD & 0x01) ? 0x80 : 0x00;
+        regD = lsb | (regD >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regD == 0x0);
+    }
+
+    void CPU::RRC_E()
+    {
+        byte lsb = (regE & 0x01) ? 0x80 : 0x00;
+        regE = lsb | (regE >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regE == 0x0);
+    }
+
+    void CPU::RRC_H()
+    {
+        byte lsb = (regH & 0x01) ? 0x80 : 0x00;
+        regH = lsb | (regH >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regH == 0x0);
+    }
+
+    void CPU::RRC_L()
+    {
+        byte lsb = (regL & 0x01) ? 0x80 : 0x00;
+        regL = lsb | (regL >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regL == 0x0);
+    }
+
+    void CPU::RRC_mHL()
+    {
+        word HL = combineByteToWord(regH, regL);
+        byte tmp = memoryUnit->readByte(HL);
+        byte lsb = (tmp & 0x01) ? 0x80 : 0x00;
+        tmp = lsb | (tmp >> 1);
+        memoryUnit->writeByte(HL, tmp);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(tmp == 0x0);
+    }
+
+    void CPU::RRC_A()
+    {
+        byte lsb = (regA & 0x01) ? 0x80 : 0x00;
+        regA = lsb | (regA >> 1);
+        changeCarryFlag(lsb);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regA == 0x0);
+    }
 }

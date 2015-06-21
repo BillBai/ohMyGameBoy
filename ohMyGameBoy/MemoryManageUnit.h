@@ -6,13 +6,12 @@
 #include "GBTypes.h"
 
 namespace GameBoy {
-	class MemoryUnit
+	class MemoryManageUnit
 	{
 	public:
 		static const size_t GBMemoryCapacity = 0xffff;
 
-
-		MemoryUnit();
+		MemoryManageUnit();
 
 		// Memory interface
 		void writeByte(address addr, byte val);
@@ -21,7 +20,7 @@ namespace GameBoy {
 		void writeWord(address addr, word val);
 		word readWord(address addr);
 
-		~MemoryUnit();
+		~MemoryManageUnit();
 	private:
 		uint8_t memory[GBMemoryCapacity];
 	};

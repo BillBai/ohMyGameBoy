@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GBTypes.h"
-#include "MemoryUnit.h"
+#include "MemoryManageUnit.h"
 
 namespace GameBoy
 {
@@ -28,6 +28,8 @@ namespace GameBoy
 		bool getSubtractFlag()	const { return (regFlag & 0x40) != 0; }
 		bool getHalfCarryFlag() const { return (regFlag & 0x20) != 0; }
 		bool getCarryFlag()		const { return (regFlag & 0x10) != 0; }
+
+        void reset();
 
 		~CPU();
 
@@ -63,9 +65,15 @@ namespace GameBoy
 		void clearCarryFlag()				{ regFlag = regFlag & (~CarryFlagMask); }
 		void changeCarryFlag(bool b)		{ regFlag = b ? (regFlag | CarryFlagMask) : (regFlag & (~CarryFlagMask)); }
 
+        // Interrupts
+        bool IME;
+
+        // clocks
+        long long machineCycleCount = 0;
+        long long clockCycleCount = 0;
 
 		// Memory
-		MemoryUnit *memoryUnit;
+        MemoryManageUnit *memoryUnit;
 
 		// CPU instructions
 		// see http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html for details
@@ -344,7 +352,23 @@ namespace GameBoy
 
 
 		// 0xCB op codes
-
+        // 0x00 ~ 0x0F
+        void RLC_B();       // RLC B
+        void RLC_C();       // RLC C
+        void RLC_D();       // RLC D
+        void RLC_E();       // RLC E
+        void RLC_H();       // RLC H
+        void RLC_L();       // RLC L
+        void RLC_mHL();     // RLC (HL)
+        void RLC_A();       // RLC A
+        void RRC_B();       // RRC B
+        void RRC_C();       // RRC C
+        void RRC_D();       // RRC D
+        void RRC_E();       // RRC E
+        void RRC_H();       // RRC H
+        void RRC_L();       // RRC L
+        void RRC_mHL();     // RRC (HL)
+        void RRC_A();       // RRC A
 	};
 }
 
