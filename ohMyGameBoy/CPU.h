@@ -369,6 +369,23 @@ namespace GameBoy
         void RRC_L();       // RRC L
         void RRC_mHL();     // RRC (HL)
         void RRC_A();       // RRC A
+        // 0x10 ~ 0x1F
+        void RL_B();        // RL B
+        void RL_C();        // RL C
+        void RL_D();        // RL D
+        void RL_E();        // RL E
+        void RL_H();        // RL H
+        void RL_L();        // RL L
+        void RL_mHL();      // RL (HL)
+        void RL_A();        // RL A
+        void RR_B();        // RR B
+        void RR_C();        // RR C
+        void RR_D();        // RR D
+        void RR_E();        // RR E
+        void RR_H();        // RR H
+        void RR_L();        // RR L
+        void RR_mHL();      // RR (HL)
+        void RR_A();        // RR A
 	};
 }
 
