@@ -386,6 +386,23 @@ namespace GameBoy
         void RR_L();        // RR L
         void RR_mHL();      // RR (HL)
         void RR_A();        // RR A
+        // 0x20 ~ 0x2F
+        void SLA_B();       // SLA B
+        void SLA_C();       // SLA C
+        void SLA_D();       // SLA D
+        void SLA_E();       // SLA E
+        void SLA_H();       // SLA H
+        void SLA_L();       // SLA L
+        void SLA_mHL();     // SLA (HL)
+        void SLA_A();       // SLA A
+        void SRA_B();       // SRA B
+        void SRA_C();       // SRA C
+        void SRA_D();       // SRA D
+        void SRA_E();       // SRA E
+        void SRA_H();       // SRA H
+        void SRA_L();       // SRA L
+        void SRA_mHL();     // SRA (HL)
+        void SRA_A();       // SRA A
 	};
 }
 

@@ -2653,4 +2653,157 @@ namespace GameBoy
         clearHalfCarryFlag();
         changeZeroFlag(regA == 0x0);
     }
+
+    // 0x20 ~ 0x2F
+    void CPU::SLA_B()
+    {
+        changeCarryFlag((regB & 0x80) != 0);
+        regB = regB << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regB == 0x0);
+    }
+
+    void CPU::SLA_C()
+    {
+        changeCarryFlag((regC & 0x80) != 0);
+        regC = regC << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regC == 0x0);
+    }
+
+    void CPU::SLA_D()
+    {
+        changeCarryFlag((regD & 0x80) != 0);
+        regD = regD << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regD == 0x0);
+    }
+
+    void CPU::SLA_E()
+    {
+        changeCarryFlag((regE & 0x80) != 0);
+        regE = regE << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regE == 0x0);
+    }
+
+    void CPU::SLA_H()
+    {
+        changeCarryFlag((regH & 0x80) != 0);
+        regH = regH << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regH == 0x0);
+    }
+
+    void CPU::SLA_L()
+    {
+        changeCarryFlag((regL & 0x80) != 0);
+        regL = regL << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regL == 0x0);
+    }
+
+    void CPU::SLA_mHL()
+    {
+        word HL = combineByteToWord(regH, regL);
+        byte tmp = memoryUnit->readByte(HL);
+        changeCarryFlag((tmp & 0x80) != 0);
+        tmp = tmp << 1;
+        memoryUnit->writeByte(HL, tmp);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(tmp == 0x0);
+    }
+
+    void CPU::SLA_A()
+    {
+        changeCarryFlag((regA & 0x80) != 0);
+        regA = regA << 1;
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regA == 0x0);
+    }
+
+    void CPU::SRA_B()
+    {
+        changeCarryFlag((regB & 0x01) != 0);
+        regB = (regB & 0x80) | (regB >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regB == 0x0);
+    }
+
+    void CPU::SRA_C()
+    {
+        changeCarryFlag((regC & 0x01) != 0);
+        regC = (regC & 0x80) | (regC >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regC == 0x0);
+    }
+
+    void CPU::SRA_D()
+    {
+        changeCarryFlag((regD & 0x01) != 0);
+        regD = (regD & 0x80) | (regD >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regD == 0x0);
+    }
+
+    void CPU::SRA_E()
+    {
+        changeCarryFlag((regE & 0x01) != 0);
+        regE = (regE & 0x80) | (regE >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regE == 0x0);
+    }
+
+    void CPU::SRA_H()
+    {
+        changeCarryFlag((regH & 0x01) != 0);
+        regH = (regH & 0x80) | (regH >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regH == 0x0);
+    }
+
+    void CPU::SRA_L()
+    {
+        changeCarryFlag((regL & 0x01) != 0);
+        regL = (regL & 0x80) | (regL >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regL == 0x0);
+    }
+
+    void CPU::SRA_mHL()
+    {
+        word HL = combineByteToWord(regH, regL);
+        byte tmp = memoryUnit->readByte(HL);
+        changeCarryFlag((tmp & 0x01) != 0);
+        tmp = (tmp & 0x80) | (tmp >> 1);
+        memoryUnit->writeByte(HL, tmp);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(tmp == 0x0);
+    }
+
+    void CPU::SRA_A()
+    {
+        changeCarryFlag((regA & 0x01) != 0);
+        regA = (regA & 0x80) | (regA >> 1);
+        clearHalfCarryFlag();
+        clearSubtractFlag();
+        changeZeroFlag(regA == 0x0);
+    }
+
+
 }
