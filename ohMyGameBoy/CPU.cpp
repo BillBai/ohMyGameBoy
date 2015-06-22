@@ -2805,5 +2805,26 @@ namespace GameBoy
         changeZeroFlag(regA == 0x0);
     }
 
+    // 0x30 ~ 0x3F
+    void CPU::SWAP_B()
+    {
+
+    }
+
+    void CPU::SWAP_C();
+    void CPU::SWAP_D();
+    void CPU::SWAP_E();
+    void CPU::SWAP_H();
+    void CPU::SWAP_L();
+    void CPU::SWAP_mHL();
+    void CPU::SWAP_A();
+    void CPU::SLR_B();
+    void CPU::SLR_C();
+    void CPU::SLR_D();
+    void CPU::SLR_E();
+    void CPU::SLR_H();
+    void CPU::SLR_L();
+    void CPU::SLR_mHL();
+    void CPU::SLR_A();
 
 }

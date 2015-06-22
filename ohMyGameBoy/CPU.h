@@ -403,6 +403,26 @@ namespace GameBoy
         void SRA_L();       // SRA L
         void SRA_mHL();     // SRA (HL)
         void SRA_A();       // SRA A
+		// 0x30 ~ 0x3F
+		void SWAP_B();		// SWAP B
+		void SWAP_C();		// SWAP C
+		void SWAP_D();		// SWAP D
+		void SWAP_E();		// SWAP E
+		void SWAP_H();		// SWAP H
+		void SWAP_L();		// SWAP L
+		void SWAP_mHL();	// SWAP (HL)
+		void SWAP_A();		// SWAP A
+		void SLR_B();		// SLR B
+		void SLR_C();		// SLR B
+		void SLR_D();		// SLR B
+		void SLR_E();		// SLR B
+		void SLR_H();		// SLR B
+		void SLR_L();		// SLR B
+		void SLR_mHL();		// SLR B
+		void SLR_A();		// SLR B
+
+
+
 	};
 }
 
